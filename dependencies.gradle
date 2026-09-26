@@ -36,4 +36,5 @@
 dependencies {
     implementation("com.gregoriust.gregtech:gregtech_1.7.10:6.17.06:dev")
     implementation("com.github.GTNewHorizons:NotEnoughItems:2.8.144-GTNH:dev")
+    implementation("com.github.GTNewHorizons:CodeChickenCore:1.4.21:dev")
 }

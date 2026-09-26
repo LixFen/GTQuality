@@ -10,4 +10,4 @@ Build with `./gradlew build` (or `gradlew.bat build` on Windows).
 
 GregTech 6 version 6.17.06 is a required dependency. The build resolves its development artifact from the [GT6 Maven repository](https://gregtech.overminddl1.com/).
 
-The build also uses [GTNH NotEnoughItems](https://github.com/GTNewHorizons/NotEnoughItems) version 2.8.144-GTNH.
+The build also uses [GTNH NotEnoughItems](https://github.com/GTNewHorizons/NotEnoughItems) version 2.8.144-GTNH and [CodeChickenCore](https://github.com/GTNewHorizons/CodeChickenCore) version 1.4.21.
