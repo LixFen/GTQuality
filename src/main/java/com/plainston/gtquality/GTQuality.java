@@ -27,6 +27,7 @@ public class GTQuality {
 
     public static boolean gtmToolBars;
     public static boolean allowObstructedInteraction;
+    public static boolean guiFluidInteraction;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -37,6 +38,9 @@ public class GTQuality {
         allowObstructedInteraction = config.getBoolean(
             "allowObstructedInteraction", "general", true,
             "Disable GT6 obstruction checks, allowing interaction with machine faces blocked by adjacent blocks.");
+        guiFluidInteraction = config.getBoolean(
+            "guiFluidInteraction", "general", true,
+            "Allow fluid containers on the cursor to fill and drain GT6 machine tanks through their GUI slots.");
         if (config.hasChanged()) config.save();
     }
 
@@ -55,5 +59,6 @@ public class GTQuality {
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         HopperHitbox.install();
+        GuiFluidInteraction.install();
     }
 }
