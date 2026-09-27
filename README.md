@@ -58,6 +58,38 @@ GT6 的漏斗明明是梯形，碰撞箱却是一整块方砖？**GTQuality 给�
 - **全机器催化剂注册**：遍历 GT6 所有 `RecipeMap`，把每台机器注册为对应配方表的 **Recipe Catalyst**——在 NEI 里按下 R/J，立刻只看“这台机器能做什么”
 - **高级工作台一键填充修复**：为 `MultiTileEntityAdvancedCraftingTable` 注册专属 Overlay Handler，正确识别其 0–20 号槽位，**配方一键摆放不再报错**
 
+### 🌲 7. 树脂袋接上漏斗，采集终于能自动化
+
+树脂袋里已经攒了树脂，还得隔一会儿手动掏一次？**让漏斗来接班。**
+
+- GT6 Resin/Sap Bag 的产物槽现在允许从侧面提取，漏斗等使用侧面物品接口的设备可以自动取走树脂
+- **所有方向都能接**：不用为了导出物品反复调整漏斗位置
+- `allowSapBagHopperExtraction` 默认开启；想保留原本的手动采集方式，在配置里关闭即可
+
+### 🪜 8. 脚手架攀爬，抬头上、低头下
+
+爬 GT6 脚手架时，方向感可以更直觉一点：**看向哪里，就往哪里走。**
+
+- **抬头并向前移动**：额外向上攀爬，抬头越高，加速越明显
+- **低头且不向前移动**：额外向下滑行，低头越多，下降越快
+- **视角向前时不触发**；上下速度可分别调整，设为 `0` 就关闭对应方向的加速
+- 安装 GaiaTweaks 时，上爬加速默认关闭，避免两边的攀爬手感叠在一起
+
+### 🔥 9. 燃烧箱与活板门，留出进气口
+
+想用活板门做一扇可开合的燃烧箱进气口，却被 GT6 的碰撞与供氧判断卡住？**关闭的原版活板门，现在也能作为进气位置。**
+
+- 对固体、液体与流化床燃烧箱的进气判断生效：关闭的活板门不会因碰撞箱挡住检测，也会被视为有氧气
+- 打开活板门时仍按 GT6 原有的碰撞与供氧逻辑判断；其他方块不受影响
+
+### 🧰 10. 细管线上的小 Cover，不再一贴就变整格
+
+红石线贴上红石火把 Cover 后，碰撞箱突然膨胀成一整格？**现在会按管线和 Cover 的实际范围计算。**
+
+- 支持细流体管、普通红石线与绝缘红石线，保留各连接方向伸出的管线范围
+- 红石火把、红石中继器与压力阀 Cover 的本体、固定件才会计入碰撞箱，点选时不再凭空碰到一整块空气
+- 贴有其他类型 Cover、包覆泡沫或本身为整格尺寸时，继续使用 GT6 原有的碰撞箱
+
 ---
 
 ## ⚙️ 配置一览
@@ -98,10 +130,13 @@ gradlew.bat build        # Windows
 
 | 提交 | 功能 |
 | --- | --- |
-| `GT6 Catalysts` | NEI 全机器催化剂 + 高级工作台配方填充 |
-| `Better chisel mold & Better bar & Better obstructed interaction` | 凿子模具选择 GUI、GTM 工具状态条、无障碍交互 |
-| `Better hopper` | 漏斗/排队漏斗精确碰撞箱与 Cover 检测 |
+| `Auto resin bag & Trapdoor control & Faster scaffold climb speed` | 树脂袋自动导出、燃烧箱活板门进气、脚手架攀爬加速 |
+| `Duardisplay compat` | 检测到 DuraDisplay 时停用 GTM 工具状态条，避免显示冲突 |
+| `Better redstone wire cover hitbox` | 细管线贴小型 Cover 时的碰撞箱修复 |
 | `GUI fluid interaction` | GUI 内流体容器直灌/直抽 |
+| `Better hopper` | 漏斗/排队漏斗精确碰撞箱与 Cover 检测 |
+| `Better chisel mold & Better bar & Better obstructed interaction` | 凿子模具选择 GUI、GTM 工具状态条、无障碍交互 |
+| `GT6 Catalysts` | NEI 全机器催化剂 + 高级工作台配方填充 |
 | `init commit` | GTNH 构建脚手架、CI、许可证 |
 
 ---
