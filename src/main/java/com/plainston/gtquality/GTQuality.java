@@ -59,6 +59,7 @@ public class GTQuality {
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         HopperHitbox.install();
+        SmallCoverHitbox.install();
         GuiFluidInteraction.install();
     }
 }
