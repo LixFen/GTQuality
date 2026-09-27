@@ -69,6 +69,9 @@ GT6 的漏斗明明是梯形，碰撞箱却是一整块方砖？**GTQuality 给�
 | `gtmToolBars` | client | `true` | 用 GTM 风格进度条替换 GT6 的工具充能/耐久图标 |
 | `allowObstructedInteraction` | general | `true` | 关闭 GT6 遮挡检查，允许交互被方块挡住的机器面 |
 | `guiFluidInteraction` | general | `true` | 允许通过 GUI 槽位，用光标上的流体容器灌注/抽取机器储罐 |
+| `allowSapBagHopperExtraction` | general | `true` | 允许料斗等自动化从 GT6 Resin/Sap Bag 提取树脂物品 |
+| `scaffoldClimbUpSpeed` | general | `0.14`；安装 GaiaTweaks 时为 `0` | 抬头前进时额外上移量（最大抬头角度时，格/tick）；`0` 关闭加速 |
+| `scaffoldClimbDownSpeed` | general | `0.15` | 低头且不前进时额外下移量（最大低头角度时，格/tick）；`0` 关闭加速 |
 
 ---
 
@@ -84,6 +87,7 @@ gradlew.bat build        # Windows
 - **入口类**：`com.plainston.gtquality.GTQuality`
 - **Minecraft**：`1.7.10`（Forge）
 - **必需依赖**：**GregTech 6 `6.17.06`**（开发产物自动从 [GT6 Maven](https://gregtech.overminddl1.com/) 解析）
+- **Mixin 运行时依赖**：**UniMixins**
 - **可选联动**：[GTNH NotEnoughItems `2.8.144-GTNH`](https://github.com/GTNewHorizons/NotEnoughItems)、[CodeChickenCore `1.4.21`](https://github.com/GTNewHorizons/CodeChickenCore)
 
 > JitPack 支持（`jitpack.yml`），CI 自动构建与打 Tag 发版（GitHub Actions）。
