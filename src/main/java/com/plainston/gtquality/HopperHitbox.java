@@ -6,10 +6,17 @@ import gregapi.block.multitileentity.IMultiTileEntity.IMTE_CollisionRayTrace;
 import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import gregtech.tileentity.inventories.MultiTileEntityHopper;
 import gregtech.tileentity.inventories.MultiTileEntityQueueHopper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
+
+import static gregapi.data.CS.TOOL_monkeywrench;
+import static gregapi.data.CS.TOOL_screwdriver;
+import static gregapi.data.CS.TOOL_wrench;
+import static gregapi.data.CS.ToolsGT;
 
 public final class HopperHitbox {
 
@@ -40,6 +47,10 @@ public final class HopperHitbox {
 
     private static Hit trace(TileEntityBase09FacingSingle hopper, Vec3 start, Vec3 end) {
         Hit hit = new Hit();
+        if (holdingTool(hopper)) {
+            hit.add(hopper, start, end, 0, 0, 0, 16, 16, 16);
+            return hit;
+        }
         hit.add(hopper, start, end, 0, 10, 0, 16, 16, 16);
         hit.add(hopper, start, end, 4, 4, 4, 12, 10, 12);
         switch (hopper.mFacing) {
@@ -58,6 +69,21 @@ public final class HopperHitbox {
             }
         }
         return hit;
+    }
+
+    private static boolean holdingTool(TileEntityBase09FacingSingle hopper) {
+        if (hopper.getWorldObj() == null || !hopper.getWorldObj().isRemote) return false;
+        return ClientTools.holdingTool();
+    }
+
+    private static final class ClientTools {
+        private static boolean holdingTool() {
+            Minecraft minecraft = Minecraft.getMinecraft();
+            if (minecraft.thePlayer == null) return false;
+            ItemStack held = minecraft.thePlayer.getCurrentEquippedItem();
+            return held != null && (ToolsGT.contains(TOOL_wrench, held)
+                || ToolsGT.contains(TOOL_monkeywrench, held) || ToolsGT.contains(TOOL_screwdriver, held));
+        }
     }
 
     private static final class Hit {
@@ -102,7 +128,8 @@ public final class HopperHitbox {
 
         @Override
         public AxisAlignedBB getSelectedBoundingBoxFromPool() {
-            return FORCE_FULL_SELECTION_BOXES || selectedBox == null ? super.getSelectedBoundingBoxFromPool() : selectedBox;
+            return FORCE_FULL_SELECTION_BOXES || holdingTool(this) ? box()
+                : selectedBox == null ? super.getSelectedBoundingBoxFromPool() : selectedBox;
         }
     }
 
@@ -118,7 +145,8 @@ public final class HopperHitbox {
 
         @Override
         public AxisAlignedBB getSelectedBoundingBoxFromPool() {
-            return FORCE_FULL_SELECTION_BOXES || selectedBox == null ? super.getSelectedBoundingBoxFromPool() : selectedBox;
+            return FORCE_FULL_SELECTION_BOXES || holdingTool(this) ? box()
+                : selectedBox == null ? super.getSelectedBoundingBoxFromPool() : selectedBox;
         }
     }
 }
