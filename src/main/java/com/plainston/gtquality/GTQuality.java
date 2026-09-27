@@ -3,6 +3,7 @@ package com.plainston.gtquality;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -53,7 +54,7 @@ public class GTQuality {
         MoldInteraction.install();
         MoldTooltip.register();
         MinecraftForge.EVENT_BUS.register(new MoldTooltip());
-        if (event.getSide().isClient()) ToolBarRenderer.install();
+        if (event.getSide().isClient() && gtmToolBars && !Loader.isModLoaded("duradisplay")) ToolBarRenderer.install();
     }
 
     @EventHandler
