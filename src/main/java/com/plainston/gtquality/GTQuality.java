@@ -75,7 +75,6 @@ public class GTQuality {
     public void postInit(FMLPostInitializationEvent event) {
         HopperHitbox.install();
         SmallCoverHitbox.install();
-        if (allowSapBagHopperExtraction) SapBagHopperExport.install();
         GuiFluidInteraction.install();
     }
 }
