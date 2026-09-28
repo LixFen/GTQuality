@@ -47,7 +47,9 @@ public final class ToolBarRenderer implements IItemRenderer {
             ICON_RENDERER.renderIcon(0, 0, icon, 16, 16);
         }
         GL11.glColor4f(1, 1, 1, 1);
-        render(tool, stack, 0, 0);
+        if (!stack.hasTagCompound() || !stack.getTagCompound().getBoolean("gtquality.hideHarvestIconDurability")) {
+            render(tool, stack, 0, 0);
+        }
         GL11.glPopAttrib();
     }
 
