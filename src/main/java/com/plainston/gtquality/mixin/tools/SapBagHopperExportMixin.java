@@ -1,12 +1,15 @@
 package com.plainston.gtquality.mixin.tools;
 
-import com.plainston.gtquality.GTQuality;
-import gregtech.tileentity.tools.MultiTileEntitySapBag;
 import net.minecraft.item.ItemStack;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import com.plainston.gtquality.GTQuality;
+
+import gregtech.tileentity.tools.MultiTileEntitySapBag;
 
 @Mixin(value = MultiTileEntitySapBag.class, remap = false)
 public abstract class SapBagHopperExportMixin {

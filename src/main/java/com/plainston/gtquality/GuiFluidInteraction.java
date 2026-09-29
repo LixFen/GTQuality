@@ -1,15 +1,5 @@
 package com.plainston.gtquality;
 
-import cpw.mods.fml.common.network.IGuiHandler;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import gregapi.GT_API;
-import gregapi.data.CS;
-import gregapi.data.FL;
-import gregapi.fluid.FluidTankGT;
-import gregapi.gui.ContainerCommonBasicMachine;
-import gregapi.gui.Slot_Render;
-import gregapi.tileentity.ITileEntityInventoryGUI;
-import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -20,6 +10,17 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
+import cpw.mods.fml.common.network.IGuiHandler;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import gregapi.GT_API;
+import gregapi.data.CS;
+import gregapi.data.FL;
+import gregapi.fluid.FluidTankGT;
+import gregapi.gui.ContainerCommonBasicMachine;
+import gregapi.gui.Slot_Render;
+import gregapi.tileentity.ITileEntityInventoryGUI;
+import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
+
 public final class GuiFluidInteraction {
 
     private GuiFluidInteraction() {}
@@ -27,6 +28,7 @@ public final class GuiFluidInteraction {
     static void install() {
         final IGuiHandler original = GT_API.api_proxy;
         NetworkRegistry.INSTANCE.registerGuiHandler(CS.GAPI, new IGuiHandler() {
+
             @Override
             public Object getServerGuiElement(int guiId, EntityPlayer player, World world, int x, int y, int z) {
                 TileEntity tile = world.getTileEntity(x, y, z);
@@ -49,6 +51,7 @@ public final class GuiFluidInteraction {
     }
 
     private static final class FluidMachineContainer extends ContainerCommonBasicMachine {
+
         FluidMachineContainer(InventoryPlayer inventory, MultiTileEntityBasicMachine machine, int guiId) {
             super(inventory, machine, machine.mRecipes, guiId);
         }
@@ -56,8 +59,10 @@ public final class GuiFluidInteraction {
         @Override
         public ItemStack slotClick(int slotIndex, int mouseButton, int mode, EntityPlayer player) {
             if (GTQuality.guiFluidInteraction && player instanceof EntityPlayerMP
-                && (mode == 0 || mode == 1) && (mouseButton == 0 || mouseButton == 1)
-                && slotIndex >= 0 && slotIndex < inventorySlots.size()
+                && (mode == 0 || mode == 1)
+                && (mouseButton == 0 || mouseButton == 1)
+                && slotIndex >= 0
+                && slotIndex < inventorySlots.size()
                 && inventorySlots.get(slotIndex) instanceof Slot_Render) {
                 click((EntityPlayerMP) player, this, slotIndex, mode == 1);
                 return null;
@@ -66,8 +71,10 @@ public final class GuiFluidInteraction {
         }
     }
 
-    private static void click(EntityPlayerMP player, ContainerCommonBasicMachine container, int slotIndex, boolean shift) {
-        if (!container.canInteractWith(player) || !(container.mTileEntity instanceof MultiTileEntityBasicMachine)) return;
+    private static void click(EntityPlayerMP player, ContainerCommonBasicMachine container, int slotIndex,
+        boolean shift) {
+        if (!container.canInteractWith(player) || !(container.mTileEntity instanceof MultiTileEntityBasicMachine))
+            return;
 
         Slot slot = (Slot) container.inventorySlots.get(slotIndex);
         MultiTileEntityBasicMachine machine = (MultiTileEntityBasicMachine) container.mTileEntity;
@@ -78,7 +85,8 @@ public final class GuiFluidInteraction {
         boolean input = fluidIndex < machine.mTanksInput.length;
         FluidTankGT tank = input ? machine.mTanksInput[fluidIndex]
             : fluidIndex - machine.mTanksInput.length < machine.mTanksOutput.length
-                ? machine.mTanksOutput[fluidIndex - machine.mTanksInput.length] : null;
+                ? machine.mTanksOutput[fluidIndex - machine.mTanksInput.length]
+                : null;
         if (tank == null) return;
 
         ItemStack held = player.inventory.getItemStack();
@@ -122,8 +130,8 @@ public final class GuiFluidInteraction {
         if (one.getItem() instanceof IFluidContainerItem) {
             result = one.copy();
             toFill = ((IFluidContainerItem) result.getItem()).drain(result, accepted, true);
-            if (toFill == null || toFill.amount <= 0 || toFill.amount > accepted
-                || !toFill.isFluidEqual(fluid)) return null;
+            if (toFill == null || toFill.amount <= 0 || toFill.amount > accepted || !toFill.isFluidEqual(fluid))
+                return null;
         } else {
             if (accepted < fluid.amount) return null;
             result = FL.getEmpty(one, true);
@@ -145,6 +153,7 @@ public final class GuiFluidInteraction {
     }
 
     private static final class Transfer {
+
         final ItemStack result;
 
         Transfer(ItemStack result) {

@@ -1,9 +1,10 @@
 package com.plainston.gtquality;
 
-import gregapi.util.WD;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.world.World;
+
+import gregapi.util.WD;
 
 public final class CombustionAir {
 

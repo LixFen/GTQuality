@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
@@ -31,13 +31,11 @@ import com.gtnewhorizons.wdmla.impl.ui.sizer.Padding;
 import com.gtnewhorizons.wdmla.impl.ui.style.ProgressStyle;
 import com.gtnewhorizons.wdmla.impl.ui.style.TextStyle;
 
-import mcp.mobius.waila.overlay.DisplayUtil;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.CS;
 import gregapi.data.FM;
 import gregapi.data.IL;
-import gregapi.data.LH;
 import gregapi.data.MT;
 import gregapi.oredict.OreDictMaterial;
 import gregapi.oredict.OreDictPrefix;
@@ -45,10 +43,10 @@ import gregapi.recipes.Recipe;
 import gregapi.tileentity.connectors.MultiTileEntityAxle;
 import gregapi.tileentity.connectors.MultiTileEntityPipeFluid;
 import gregapi.tileentity.connectors.MultiTileEntityWireElectric;
-import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import gregapi.tileentity.machines.ITileEntityRunningActively;
 import gregapi.tileentity.machines.ITileEntityRunningPassively;
 import gregapi.tileentity.machines.ITileEntitySwitchableOnOff;
+import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.tileentity.tank.TileEntityBase08Barrel;
 import gregapi.tileentity.tank.TileEntityBase08FluidContainer;
@@ -67,13 +65,15 @@ import gregtech.tileentity.multiblocks.MultiTileEntityCrucible;
 import gregtech.tileentity.multiblocks.MultiTileEntityTank;
 import gregtech.tileentity.plants.MultiTileEntityBush;
 import gregtech.tileentity.tools.MultiTileEntityAnvil;
-import gregtech.tileentity.tools.MultiTileEntityMold;
 import gregtech.tileentity.tools.MultiTileEntityMixingBowl;
+import gregtech.tileentity.tools.MultiTileEntityMold;
 import gregtech.tileentity.tools.MultiTileEntitySiftingTable;
 import gregtech.tileentity.tools.MultiTileEntitySmeltery;
+import mcp.mobius.waila.overlay.DisplayUtil;
 
 /** Modern WDMla presentation for the GT6WailaCompact machine details. */
 public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
+
     INSTANCE;
 
     private static final ResourceLocation UID = new ResourceLocation("gtquality", "gt6_details");
@@ -111,7 +111,8 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
             int x = data.getInteger("gt.target.x");
             int y = data.getInteger("gt.target.y");
             int z = data.getInteger("gt.target.z");
-            TileEntity target = accessor.getWorld().getTileEntity(x, y, z);
+            TileEntity target = accessor.getWorld()
+                .getTileEntity(x, y, z);
             if (target != null && !(target instanceof MultiTileEntityMultiBlockPart) && isSupported(target)) {
                 NBTTagCompound targetData = new NBTTagCompound();
                 writeMachineData(target, targetData);
@@ -201,40 +202,50 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
         } else if (tile instanceof MultiTileEntityRock) {
             copyTags(source, target, "gt.value");
         } else if (tile instanceof TileEntityBase08FluidContainer || tile instanceof TileEntityBase08Barrel
-                || tile instanceof MultiTileEntityTank) {
-            copyTags(source, target, "gt.tank");
-        } else if (tile instanceof MultiTileEntityMultiBlockPart) {
-            copyTags(source, target, "gt.target", "gt.target.x", "gt.target.y", "gt.target.z");
-        } else if (tile instanceof MultiTileEntityAnvil) {
-            copyTags(source, target, "gt.durability", "gt.facing");
-        } else if (tile instanceof MultiTileEntityEngineSteam) {
-            copyTags(source, target, CS.NBT_ENERGY, CS.NBT_VISUAL, CS.NBT_EFFICIENCY, CS.NBT_ACTIVE, CS.NBT_STOPPED);
-        } else if (tile instanceof MultiTileEntityTurbineSteam) {
-            copyTags(source, target, "gt.output.su", "gt.tank.0");
-        } else if (tile instanceof MultiTileEntityFluidSpring) {
-            copyTags(source, target, "gt.spring");
-        } else if (tile instanceof MultiTileEntityMixingBowl) {
-            copyTags(source, target, "gt.invlist");
-            for (int i = 0; i < 6; i++) copyTags(source, target, "gt.tank.in." + i);
-            for (int i = 0; i < 2; i++) copyTags(source, target, "gt.tank.out." + i);
-        } else if (tile instanceof MultiTileEntityPipeFluid) {
-            copyTags(source, target, "gt.mlast.8");
-            for (int i = 0; i < 9; i++) copyTags(source, target, "gt.tank." + i);
-        } else if (tile instanceof MultiTileEntitySiftingTable) {
-            copyTags(source, target, "gt.invlist");
-        } else if (tile instanceof MultiTileEntityMotorLiquid) {
-            copyTags(source, target, "gt.energy", "gt.tank.0", "gt.tank.1");
-        } else if (tile instanceof MultiTileEntityReactorCore) {
-            copyTags(source, target, "gt.tank.0", "gt.tank.1", "gt.stopped", "gt.invlist");
-            for (int i = 0; i < 4; i++) copyTags(source, target, "gt.value.o." + i);
-        } else if (tile instanceof MultiTileEntityBush) {
-            copyTags(source, target, "gt.state", "gt.progress", "gt.value");
-        }
+            || tile instanceof MultiTileEntityTank) {
+                copyTags(source, target, "gt.tank");
+            } else if (tile instanceof MultiTileEntityMultiBlockPart) {
+                copyTags(source, target, "gt.target", "gt.target.x", "gt.target.y", "gt.target.z");
+            } else if (tile instanceof MultiTileEntityAnvil) {
+                copyTags(source, target, "gt.durability", "gt.facing");
+            } else if (tile instanceof MultiTileEntityEngineSteam) {
+                copyTags(
+                    source,
+                    target,
+                    CS.NBT_ENERGY,
+                    CS.NBT_VISUAL,
+                    CS.NBT_EFFICIENCY,
+                    CS.NBT_ACTIVE,
+                    CS.NBT_STOPPED);
+            } else if (tile instanceof MultiTileEntityTurbineSteam) {
+                copyTags(source, target, "gt.output.su", "gt.tank.0");
+            } else if (tile instanceof MultiTileEntityFluidSpring) {
+                copyTags(source, target, "gt.spring");
+            } else if (tile instanceof MultiTileEntityMixingBowl) {
+                copyTags(source, target, "gt.invlist");
+                for (int i = 0; i < 6; i++) copyTags(source, target, "gt.tank.in." + i);
+                for (int i = 0; i < 2; i++) copyTags(source, target, "gt.tank.out." + i);
+            } else if (tile instanceof MultiTileEntityPipeFluid) {
+                copyTags(source, target, "gt.mlast.8");
+                for (int i = 0; i < 9; i++) copyTags(source, target, "gt.tank." + i);
+            } else if (tile instanceof MultiTileEntitySiftingTable) {
+                copyTags(source, target, "gt.invlist");
+            } else if (tile instanceof MultiTileEntityMotorLiquid) {
+                copyTags(source, target, "gt.energy", "gt.tank.0", "gt.tank.1");
+            } else if (tile instanceof MultiTileEntityReactorCore) {
+                copyTags(source, target, "gt.tank.0", "gt.tank.1", "gt.stopped", "gt.invlist");
+                for (int i = 0; i < 4; i++) copyTags(source, target, "gt.value.o." + i);
+            } else if (tile instanceof MultiTileEntityBush) {
+                copyTags(source, target, "gt.state", "gt.progress", "gt.value");
+            }
     }
 
     private static void copyTags(NBTTagCompound source, NBTTagCompound target, String... keys) {
         for (String key : keys) {
-            if (source.hasKey(key)) target.setTag(key, source.getTag(key).copy());
+            if (source.hasKey(key)) target.setTag(
+                key,
+                source.getTag(key)
+                    .copy());
         }
     }
 
@@ -244,11 +255,17 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
         try {
             MultiTileEntityRegistry registry = MultiTileEntityRegistry.getRegistry("gt.multitileentity");
             gregapi.block.multitileentity.MultiTileEntityClassContainer container = registry == null ? null
-                    : registry.getClassContainer(mteId);
+                : registry.getClassContainer(mteId);
             if (container == null || container.mParameters == null) return;
             NBTTagCompound parameters = new NBTTagCompound();
-            copyTags(container.mParameters, parameters,
-                    "gt.capacity.su", "gt.capacity", "gt.output.su", "gt.output", "gt.input");
+            copyTags(
+                container.mParameters,
+                parameters,
+                "gt.capacity.su",
+                "gt.capacity",
+                "gt.output.su",
+                "gt.output",
+                "gt.input");
             data.setTag(PARAMS, parameters);
         } catch (RuntimeException ignored) {
             // Keep the live HUD fields useful if a registry entry is unavailable.
@@ -257,7 +274,7 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
 
     private static void writeMachineState(TileEntity tile, NBTTagCompound data) {
         if (!(tile instanceof ITileEntityRunningActively) && !(tile instanceof ITileEntityRunningPassively)
-                && !(tile instanceof ITileEntitySwitchableOnOff)) return;
+            && !(tile instanceof ITileEntitySwitchableOnOff)) return;
 
         data.setBoolean(STATE_SUPPORTED, true);
         if (tile instanceof ITileEntitySwitchableOnOff) {
@@ -266,10 +283,10 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
             data.setBoolean(STATE_ON, !data.hasKey(CS.NBT_STOPPED));
         }
         data.setBoolean(
-                STATE_PASSIVE,
-                tile instanceof ITileEntityRunningPassively
-                        ? ((ITileEntityRunningPassively) tile).getStateRunningPassively()
-                        : data.getBoolean(STATE_ON));
+            STATE_PASSIVE,
+            tile instanceof ITileEntityRunningPassively
+                ? ((ITileEntityRunningPassively) tile).getStateRunningPassively()
+                : data.getBoolean(STATE_ON));
         if (tile instanceof ITileEntityRunningActively) {
             data.setBoolean(STATE_ACTIVE, ((ITileEntityRunningActively) tile).getStateRunningActively());
         }
@@ -316,7 +333,8 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
             int x = data.getInteger("gt.target.x");
             int y = data.getInteger("gt.target.y");
             int z = data.getInteger("gt.target.z");
-            TileEntity target = accessor.getWorld().getTileEntity(x, y, z);
+            TileEntity target = accessor.getWorld()
+                .getTileEntity(x, y, z);
             NBTTagCompound targetData = data.getCompoundTag(TARGET);
             if (target != null && targetData.getBoolean(READY)) {
                 appendMachineInfo(tooltip, target, targetData, accessor, true);
@@ -327,29 +345,42 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
     }
 
     private static boolean isSupported(TileEntity tile) {
-        return tile instanceof MultiTileEntityBasicMachine || tile instanceof MultiTileEntitySmeltery || tile instanceof MultiTileEntityCrucible
-                || tile instanceof MultiTileEntityBoilerTank || tile instanceof MultiTileEntityRock
-                || tile instanceof TileEntityBase08FluidContainer || tile instanceof MultiTileEntityGeneratorSolid
-                || tile instanceof MultiTileEntityGeneratorLiquid || tile instanceof MultiTileEntityGeneratorFluidBed
-                || tile instanceof MultiTileEntityMultiBlockPart || tile instanceof MultiTileEntityAnvil
-                || tile instanceof MultiTileEntityEngineSteam || tile instanceof MultiTileEntityTurbineSteam
-                || tile instanceof MultiTileEntityAxle || tile instanceof MultiTileEntityWireElectric
-                || tile instanceof MultiTileEntityFluidSpring || tile instanceof MultiTileEntityMixingBowl
-                || tile instanceof TileEntityBase08Barrel || tile instanceof MultiTileEntityPipeFluid
-                || tile instanceof MultiTileEntitySiftingTable || tile instanceof MultiTileEntityMotorLiquid
-                || tile instanceof MultiTileEntityReactorCore || tile instanceof MultiTileEntityBush
-                || tile instanceof MultiTileEntityMold || tile instanceof MultiTileEntityCokeOven
-                || tile instanceof MultiTileEntityTank;
+        return tile instanceof MultiTileEntityBasicMachine || tile instanceof MultiTileEntitySmeltery
+            || tile instanceof MultiTileEntityCrucible
+            || tile instanceof MultiTileEntityBoilerTank
+            || tile instanceof MultiTileEntityRock
+            || tile instanceof TileEntityBase08FluidContainer
+            || tile instanceof MultiTileEntityGeneratorSolid
+            || tile instanceof MultiTileEntityGeneratorLiquid
+            || tile instanceof MultiTileEntityGeneratorFluidBed
+            || tile instanceof MultiTileEntityMultiBlockPart
+            || tile instanceof MultiTileEntityAnvil
+            || tile instanceof MultiTileEntityEngineSteam
+            || tile instanceof MultiTileEntityTurbineSteam
+            || tile instanceof MultiTileEntityAxle
+            || tile instanceof MultiTileEntityWireElectric
+            || tile instanceof MultiTileEntityFluidSpring
+            || tile instanceof MultiTileEntityMixingBowl
+            || tile instanceof TileEntityBase08Barrel
+            || tile instanceof MultiTileEntityPipeFluid
+            || tile instanceof MultiTileEntitySiftingTable
+            || tile instanceof MultiTileEntityMotorLiquid
+            || tile instanceof MultiTileEntityReactorCore
+            || tile instanceof MultiTileEntityBush
+            || tile instanceof MultiTileEntityMold
+            || tile instanceof MultiTileEntityCokeOven
+            || tile instanceof MultiTileEntityTank;
     }
 
     private static boolean hasDirectDetails(TileEntity tile) {
         return isSupported(tile) && !(tile instanceof TileEntityBase08FluidContainer)
-                && !(tile instanceof TileEntityBase08Barrel) && !(tile instanceof MultiTileEntityTank)
-                && !(tile instanceof MultiTileEntityPipeFluid);
+            && !(tile instanceof TileEntityBase08Barrel)
+            && !(tile instanceof MultiTileEntityTank)
+            && !(tile instanceof MultiTileEntityPipeFluid);
     }
 
     private static void appendMachineInfo(ITooltip tooltip, TileEntity tile, NBTTagCompound data,
-            BlockAccessor accessor, boolean throughMultiblockPart) {
+        BlockAccessor accessor, boolean throughMultiblockPart) {
         if (data.getBoolean(STATE_SUPPORTED)) {
             if (tile instanceof MultiTileEntityBasicMachine) appendBasicMachineState(tooltip, data);
             else appendInterfaceMachineState(tooltip, data);
@@ -357,8 +388,10 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
         if (tile instanceof MultiTileEntityBasicMachine) appendBasicMachineInfo(tooltip, data);
 
         if (tile instanceof MultiTileEntitySmeltery || tile instanceof MultiTileEntityCrucible) {
-            addLine(tooltip, "temperature", data.getShort("gt.temperature") + " / "
-                    + data.getLong("gtquality.max_temperature") + " K");
+            addLine(
+                tooltip,
+                "temperature",
+                data.getShort("gt.temperature") + " / " + data.getLong("gtquality.max_temperature") + " K");
             appendMaterials(tooltip, data.getCompoundTag("gt.materials"));
         } else if (tile instanceof MultiTileEntityMold) {
             appendMoldInfo(tooltip, (MultiTileEntityMold) tile, data);
@@ -414,23 +447,36 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
     }
 
     private static void appendMoldInfo(ITooltip tooltip, MultiTileEntityMold mold, NBTTagCompound data) {
-        addLine(tooltip, "temperature", data.getLong("gt.temperature") + "K/"
-                + data.getLong("gtquality.max_temperature") + "K");
+        addLine(
+            tooltip,
+            "temperature",
+            data.getLong("gt.temperature") + "K/" + data.getLong("gtquality.max_temperature") + "K");
 
         OreDictPrefix prefix = mold.getMoldRecipe(data.getInteger("gt.mold"));
         addLine(tooltip, "mold_produces", prefix == null ? tr("mold_unselected") : prefix.mNameLocal);
 
         byte directions = data.getByte("gt.connection");
         StringBuilder autoInputDirections = new StringBuilder();
-        for (byte side : CS.ALL_SIDES_VALID) {
+        for (byte side : CS.COMPASS_DIRECTIONS) {
             if (!CS.SIDES_HORIZONTAL[side] || (directions & CS.SBIT[side]) == 0) continue;
             if (autoInputDirections.length() > 0) autoInputDirections.append('&');
-            autoInputDirections.append(LH.get(LH.FACES[side]));
+            autoInputDirections.append(tr(cardinalDirectionKey(side)));
         }
-        addLine(tooltip, "mold_auto_input_directions", autoInputDirections.length() == 0
-                ? tr("mold_no_directions") : autoInputDirections.toString());
-        addLine(tooltip, "mold_redstone_mode", data.getBoolean("gt.mode")
-                ? tr("mold_redstone_requires_signal") : tr("mold_redstone_uncontrolled"));
+        addLine(
+            tooltip,
+            "mold_auto_input_directions",
+            autoInputDirections.length() == 0 ? tr("mold_no_directions") : autoInputDirections.toString());
+        addLine(
+            tooltip,
+            "mold_redstone_mode",
+            data.getBoolean("gt.mode") ? tr("mold_redstone_requires_signal") : tr("mold_redstone_uncontrolled"));
+    }
+
+    private static String cardinalDirectionKey(byte side) {
+        if (side == CS.SIDE_NORTH) return "direction.north";
+        if (side == CS.SIDE_EAST) return "direction.east";
+        if (side == CS.SIDE_SOUTH) return "direction.south";
+        return "direction.west";
     }
 
     private static void appendBoiler(ITooltip tooltip, NBTTagCompound data, boolean throughMultiblockPart) {
@@ -466,7 +512,8 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
         addItem(tooltip, "fuel", fuel);
         addItem(tooltip, "ash", ash);
         if (data.hasKey("gt.active")) {
-            long output = data.getCompoundTag(PARAMS).getLong("gt.output");
+            long output = data.getCompoundTag(PARAMS)
+                .getLong("gt.output");
             long ticks = output <= 0 ? data.getLong("gt.energy") : data.getLong("gt.energy") / output;
             addLine(tooltip, "burn_time", formatTime(ticks));
             addLine(tooltip, "heat_output", output + " HU/t");
@@ -484,7 +531,8 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
         addItem(tooltip, "fuel", fuel);
         addItem(tooltip, "ash", ash);
         if (data.hasKey("gt.active")) {
-            long output = data.getCompoundTag(PARAMS).getLong("gt.output");
+            long output = data.getCompoundTag(PARAMS)
+                .getLong("gt.output");
             long ticks = output <= 0 ? data.getLong("gt.energy") : data.getLong("gt.energy") / output;
             addLine(tooltip, "burn_time", formatTime(ticks));
             addLine(tooltip, "heat_output", output + " HU/t");
@@ -492,9 +540,12 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
     }
 
     private static void appendLiquidGenerator(ITooltip tooltip, NBTTagCompound data, Map<String, ?> recipeMap,
-            boolean throughMultiblockPart) {
+        boolean throughMultiblockPart) {
         FluidStack fuel = getFluid(data, "gt.tank");
-        long output = Math.max(1, data.getCompoundTag(PARAMS).getLong("gt.output"));
+        long output = Math.max(
+            1,
+            data.getCompoundTag(PARAMS)
+                .getLong("gt.output"));
         if (throughMultiblockPart) addFluidGauge(tooltip, "fuel", fuel, output * 10);
         if (data.hasKey("gt.active")) {
             double rate = getFuelConsumption(recipeMap, fuel, output);
@@ -505,8 +556,10 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
 
     private static double getFuelConsumption(Map<String, ?> recipeMap, FluidStack fuel, long output) {
         if (fuel == null) return 0;
-        Object recipesObject = recipeMap.get(fuel.getFluid().getName());
-        if (!(recipesObject instanceof Iterable<?> recipes)) return 0;
+        Object recipesObject = recipeMap.get(
+            fuel.getFluid()
+                .getName());
+        if (!(recipesObject instanceof Iterable<?>recipes)) return 0;
         for (Object entry : recipes) {
             if (!(entry instanceof Recipe recipe)) continue;
             long fuelHeat = -recipe.mEUt * recipe.mDuration;
@@ -529,8 +582,8 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
         addLine(tooltip, "anvil_durability", (durability / 10) + "." + (durability % 10));
         int side = accessor.getHitResult() == null ? -1 : accessor.getHitResult().sideHit;
         int facing = data.getInteger("gt.facing");
-        boolean endFace = side >= 0 && ((facing == 2 || facing == 3) ? side >= 4
-                : (facing == 4 || facing == 5) && side > 1 && side < 4);
+        boolean endFace = side >= 0
+            && ((facing == 2 || facing == 3) ? side >= 4 : (facing == 4 || facing == 5) && side > 1 && side < 4);
         if (endFace) {
             boolean bigEnd = facing == 2 || facing == 3 ? (side - facing) % 2 == 1 : (facing - side) % 2 == 1;
             addLine(tooltip, "anvil_end", tr(bigEnd ? "anvil_big" : "anvil_small"));
@@ -556,9 +609,9 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
     }
 
     private static void appendSteamTurbine(ITooltip tooltip, NBTTagCompound data) {
-        long output = data.hasKey("gt.output.su") ? data.getLong("gt.output.su")
-                : amount(getFluid(data, "gt.tank.0"));
-        long input = data.getCompoundTag(PARAMS).getLong("gt.input");
+        long output = data.hasKey("gt.output.su") ? data.getLong("gt.output.su") : amount(getFluid(data, "gt.tank.0"));
+        long input = data.getCompoundTag(PARAMS)
+            .getLong("gt.input");
         if (output > input * 2) {
             addLine(tooltip, "state", tr("overpowered"));
         } else {
@@ -571,10 +624,13 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
         Map<Integer, ItemStack> inventory = getInventory(data);
         VPanelComponent inputs = new VPanelComponent();
         for (Map.Entry<Integer, ItemStack> entry : inventory.entrySet()) {
-            if (entry.getKey() != 6 && entry.getValue() != null) inputs.child(ThemeHelper.INSTANCE.itemStackFullLine(entry.getValue()));
+            if (entry.getKey() != 6 && entry.getValue() != null)
+                inputs.child(ThemeHelper.INSTANCE.itemStackFullLine(entry.getValue()));
         }
         if (inputs.childrenSize() > 0) {
-            tooltip.child(new HPanelComponent().text(tr("item_inputs") + ":").child(inputs));
+            tooltip.child(
+                new HPanelComponent().text(tr("item_inputs") + ":")
+                    .child(inputs));
         }
         addItem(tooltip, "item_output", inventory.get(6));
         if (throughMultiblockPart) {
@@ -592,8 +648,9 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
             FluidStack fluid = getFluid(data, "gt.tank." + i);
             HPanelComponent cell = new HPanelComponent();
             if (fluid != null) cell.child(new FluidComponent(fluid));
-            cell.child(ThemeHelper.INSTANCE.info(
-                    fluid == null ? tr("empty") : fluid.amount + " mB " + fluid.getLocalizedName()));
+            cell.child(
+                ThemeHelper.INSTANCE
+                    .info(fluid == null ? tr("empty") : fluid.amount + " mB " + fluid.getLocalizedName()));
             row.child(cell);
             if (i % columns == columns - 1) {
                 tooltip.child(row);
@@ -605,12 +662,17 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
     private static void appendSifter(ITooltip tooltip, NBTTagCompound data) {
         Map<Integer, ItemStack> inventory = getInventory(data);
         addItem(tooltip, "item_input", inventory.get(0));
-        int lastSlot = inventory.keySet().stream().mapToInt(Integer::intValue).max().orElse(0);
+        int lastSlot = inventory.keySet()
+            .stream()
+            .mapToInt(Integer::intValue)
+            .max()
+            .orElse(0);
         addItems(tooltip, "item_output", inventory, 1, lastSlot + 1);
     }
 
     private static void appendLiquidMotor(ITooltip tooltip, NBTTagCompound data, boolean throughMultiblockPart) {
-        long output = data.getCompoundTag(PARAMS).getLong("gt.output");
+        long output = data.getCompoundTag(PARAMS)
+            .getLong("gt.output");
         FluidStack fuel = getFluid(data, "gt.tank.0");
         if (throughMultiblockPart) {
             long capacity = Math.max(1, output * 10);
@@ -618,7 +680,10 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
             addFluidGauge(tooltip, "exhaust", getFluid(data, "gt.tank.1"), capacity);
         }
         if (data.hasKey("gt.energy")) {
-            addLine(tooltip, "fuel_rate", String.format(Locale.ROOT, "%.2f L/t", getFuelConsumption(FM.Engine.mRecipeFluidMap, fuel, output)));
+            addLine(
+                tooltip,
+                "fuel_rate",
+                String.format(Locale.ROOT, "%.2f L/t", getFuelConsumption(FM.Engine.mRecipeFluidMap, fuel, output)));
             addLine(tooltip, "energy_output", output + " RU/t");
         }
     }
@@ -639,11 +704,12 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
                 case 1 -> heat += neutron * 2;
                 case 2 -> heat += neutron / 2;
                 case 3 -> heat += neutron;
-                default -> { }
+                default -> {}
             }
-            String durability = rod.hasTagCompound()
-                    ? " · " + formatTime(rod.getTagCompound().getLong(CS.NBT_DURABILITY) / 100)
-                    : "";
+            String durability = rod.hasTagCompound() ? " · " + formatTime(
+                rod.getTagCompound()
+                    .getLong(CS.NBT_DURABILITY) / 100)
+                : "";
             addLine(tooltip, "reactor_rod", entry.getKey() + ": " + rod.getDisplayName() + durability);
         }
         if (coolant != null && MT.Sn.mLiquid.isFluidEqual(coolant)) heat = (long) Math.ceil(heat / 3.0);
@@ -654,7 +720,9 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
         for (int i = 0; i < 4; i++) {
             if (!data.hasKey("gt.value.o." + i)) continue;
             if (neutrons.length() != 0) neutrons.append(" | ");
-            neutrons.append(i).append(": ").append(data.getLong("gt.value.o." + i));
+            neutrons.append(i)
+                .append(": ")
+                .append(data.getLong("gt.value.o." + i));
         }
         if (neutrons.length() != 0) addLine(tooltip, "neutron_count", neutrons.toString());
     }
@@ -691,7 +759,11 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
         }
 
         Map<Integer, ItemStack> inventory = getInventory(data);
-        int lastSlot = inventory.keySet().stream().mapToInt(Integer::intValue).max().orElse(-1);
+        int lastSlot = inventory.keySet()
+            .stream()
+            .mapToInt(Integer::intValue)
+            .max()
+            .orElse(-1);
         addItems(tooltip, "machine_items", inventory, 0, lastSlot + 1);
     }
 
@@ -699,29 +771,31 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
         String state;
         if (!data.getBoolean(STATE_ON) || !data.getBoolean(STATE_PASSIVE)) {
             state = "state.stopped";
-        } else if (data.getBoolean(STATE_ACTIVE)
-                && ((data.getBoolean(RECIPE_ACTIVE) && data.getLong("gt.maxprogress") > 0)
-                        || data.getBoolean(RECIPE_COMPLETED))) {
-            state = "state.running";
-        } else if (!data.getBoolean(RECIPE_ACTIVE) && data.getLong("gt.maxprogress") <= 0) {
-            state = "state.idle";
-        } else {
-            state = "state.stopped";
-        }
+        } else
+            if (data.getBoolean(STATE_ACTIVE) && ((data.getBoolean(RECIPE_ACTIVE) && data.getLong("gt.maxprogress") > 0)
+                || data.getBoolean(RECIPE_COMPLETED))) {
+                    state = "state.running";
+                } else if (!data.getBoolean(RECIPE_ACTIVE) && data.getLong("gt.maxprogress") <= 0) {
+                    state = "state.idle";
+                } else {
+                    state = "state.stopped";
+                }
         addStateLine(tooltip, state);
     }
 
     private static void appendInterfaceMachineState(ITooltip tooltip, NBTTagCompound data) {
         String state = !data.getBoolean(STATE_ON) || !data.getBoolean(STATE_PASSIVE) ? "state.stopped"
-                : data.getBoolean(STATE_ACTIVE) ? "state.running" : "state.idle";
+            : data.getBoolean(STATE_ACTIVE) ? "state.running" : "state.idle";
         addStateLine(tooltip, state);
     }
 
     private static void addStateLine(ITooltip tooltip, String stateKey) {
         IComponent state = "state.running".equals(stateKey) ? ThemeHelper.INSTANCE.success(tr(stateKey))
-                : "state.idle".equals(stateKey) ? ThemeHelper.INSTANCE.color(tr(stateKey), MessageType.MOD_NAME)
-                        : ThemeHelper.INSTANCE.failure(tr("state.stopped"));
-        tooltip.child(new HPanelComponent().text(tr("state") + ": ").child(state));
+            : "state.idle".equals(stateKey) ? ThemeHelper.INSTANCE.color(tr(stateKey), MessageType.MOD_NAME)
+                : ThemeHelper.INSTANCE.failure(tr("state.stopped"));
+        tooltip.child(
+            new HPanelComponent().text(tr("state") + ": ")
+                .child(state));
     }
 
     private static void appendMaterials(ITooltip tooltip, NBTTagCompound materials) {
@@ -738,13 +812,19 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
             long amount = materialTag.getLong("a") / 648648;
             if (rowCount == 0) rowStart = i;
             else row.child(new TextComponent(" | ").style(new TextStyle().color(0xFFFF55)));
-            row.child(new TextComponent(String.format(Locale.ROOT, "%.3f %s", amount / 1000.0,
-                    StatCollector.translateToLocal("gt.material." + material.mNameInternal)))
+            row.child(
+                new TextComponent(
+                    String.format(
+                        Locale.ROOT,
+                        "%.3f %s",
+                        amount / 1000.0,
+                        StatCollector.translateToLocal("gt.material." + material.mNameInternal)))
                             .style(new TextStyle().color(0xFFFFFF)));
             rowCount++;
             if (i % 4 == 3 || i == 31 || !materials.hasKey(Integer.toString(i + 1))) {
                 HPanelComponent line = new HPanelComponent();
-                line.child(new TextComponent(String.format("%s %d–%d: ", tr("materials"), rowStart + 1, i + 1))
+                line.child(
+                    new TextComponent(String.format("%s %d–%d: ", tr("materials"), rowStart + 1, i + 1))
                         .style(new TextStyle().color(0xFFFFFF)));
                 line.child(row);
                 rows.child(line);
@@ -781,8 +861,8 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
         long safeCurrent = Math.max(0, Math.min(current, safeMax));
         long percentage = Math.round(safeCurrent * 100.0 / safeMax);
         String description = tr("progress_short") + ": " + percentage + "%";
-        tooltip.child(new ProgressComponent(safeCurrent, safeMax)
-                .style(new ProgressStyle())
+        tooltip.child(
+            new ProgressComponent(safeCurrent, safeMax).style(new ProgressStyle())
                 .child(new TextComponent(description).padding(new Padding(2, 1, 2, 3))));
     }
 
@@ -791,20 +871,28 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
     }
 
     private static void addProgressGauge(ITooltip tooltip, String key, long current, long max, FluidStack overlay,
-            String valueOverride) {
+        String valueOverride) {
         long safeMax = Math.max(1, max);
         long safeCurrent = Math.max(0, Math.min(current, safeMax));
-        String text = tr(key) + ": " + (valueOverride == null
-                ? Math.max(0, current) + " / " + Math.max(0, max) + " (" + formatPercent(current * 100.0 / safeMax) + ")"
+        String text = tr(key) + ": "
+            + (valueOverride == null
+                ? Math.max(0, current) + " / "
+                    + Math.max(0, max)
+                    + " ("
+                    + formatPercent(current * 100.0 / safeMax)
+                    + ")"
                 : valueOverride);
         ProgressStyle style = new ProgressStyle();
         if (overlay != null) style.overlay(new FluidDrawable(overlay));
-        tooltip.child(new ProgressComponent(safeCurrent, safeMax).style(style)
+        tooltip.child(
+            new ProgressComponent(safeCurrent, safeMax).style(style)
                 .child(new TextComponent(text).padding(new Padding(2, 1, 2, 3))));
     }
 
     private static void addLine(ITooltip tooltip, String key, String value) {
-        tooltip.child(new HPanelComponent().text(tr(key) + ": ").child(ThemeHelper.INSTANCE.info(value)));
+        tooltip.child(
+            new HPanelComponent().text(tr(key) + ": ")
+                .child(ThemeHelper.INSTANCE.info(value)));
     }
 
     private static void addItem(ITooltip tooltip, String key, ItemStack stack) {
@@ -835,8 +923,8 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
             row.child(ThemeHelper.INSTANCE.smallItem(stack));
             row.text(String.valueOf(stack.stackSize));
             row.text(StatCollector.translateToLocal("hud.msg.wdmla.item.count"));
-            row.child(ThemeHelper.INSTANCE.info(
-                    DisplayUtil.stripSymbols(DisplayUtil.itemDisplayNameShortFormatted(stack))));
+            row.child(
+                ThemeHelper.INSTANCE.info(DisplayUtil.stripSymbols(DisplayUtil.itemDisplayNameShortFormatted(stack))));
             list.child(row);
         }
         tooltip.child(list);

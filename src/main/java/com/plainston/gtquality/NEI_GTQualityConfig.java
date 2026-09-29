@@ -1,13 +1,14 @@
 package com.plainston.gtquality;
 
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
+
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 import codechicken.nei.event.NEIConfigsLoadedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import gregapi.recipes.Recipe.RecipeMap;
 import gregapi.tileentity.tools.MultiTileEntityAdvancedCraftingTable.MultiTileEntityGUIClientAdvancedCraftingTable;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
 
 public class NEI_GTQualityConfig implements IConfigureNEI {
 
@@ -28,7 +29,9 @@ public class NEI_GTQualityConfig implements IConfigureNEI {
     @SubscribeEvent
     public void onNEIConfigsLoaded(NEIConfigsLoadedEvent event) {
         API.registerGuiOverlayHandler(
-            MultiTileEntityGUIClientAdvancedCraftingTable.class, new AdvancedCraftingOverlayHandler(), "crafting");
+            MultiTileEntityGUIClientAdvancedCraftingTable.class,
+            new AdvancedCraftingOverlayHandler(),
+            "crafting");
         MinecraftForge.EVENT_BUS.unregister(this);
     }
 

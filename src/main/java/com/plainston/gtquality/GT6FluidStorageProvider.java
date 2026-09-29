@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
@@ -21,8 +19,9 @@ import com.gtnewhorizons.wdmla.api.view.ViewGroup;
 import gregapi.tileentity.tank.TileEntityBase08FluidContainer;
 
 /** Supplies GT6 tank contents to WDMla's native fluid gauge renderer. */
-public enum GT6FluidStorageProvider implements IServerExtensionProvider<FluidView.Data>,
-        IClientExtensionProvider<FluidView.Data, FluidView> {
+public enum GT6FluidStorageProvider
+    implements IServerExtensionProvider<FluidView.Data>, IClientExtensionProvider<FluidView.Data, FluidView> {
+
     INSTANCE;
 
     private static final ResourceLocation UID = new ResourceLocation("gtquality", "gt6_fluid_storage");
@@ -35,7 +34,7 @@ public enum GT6FluidStorageProvider implements IServerExtensionProvider<FluidVie
     @Override
     public boolean shouldRequestData(Accessor accessor) {
         return accessor.getTarget() instanceof IFluidHandler
-                || accessor.getTarget() instanceof TileEntityBase08FluidContainer;
+            || accessor.getTarget() instanceof TileEntityBase08FluidContainer;
     }
 
     @Override
@@ -60,8 +59,7 @@ public enum GT6FluidStorageProvider implements IServerExtensionProvider<FluidVie
     }
 
     @Override
-    public List<ClientViewGroup<FluidView>> getClientGroups(Accessor accessor,
-            List<ViewGroup<FluidView.Data>> groups) {
+    public List<ClientViewGroup<FluidView>> getClientGroups(Accessor accessor, List<ViewGroup<FluidView.Data>> groups) {
         return ClientViewGroup.map(groups, FluidView::readDefault, null);
     }
 }

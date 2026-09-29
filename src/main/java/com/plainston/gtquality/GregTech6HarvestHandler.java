@@ -48,10 +48,12 @@ public enum GregTech6HarvestHandler implements HarvestHandler {
         if (!MD.GT.owns(block) && !MD.GAPI.owns(block)) return true;
 
         if (phase == HarvestabilityTestPhase.EFFECTIVE_TOOL_NAME) {
-            if (!info.getEffectiveTool().isSameTool(EffectiveTool.CANNOT_HARVEST)) {
+            if (!info.getEffectiveTool()
+                .isSameTool(EffectiveTool.CANNOT_HARVEST)) {
                 String tool = block.getHarvestTool(meta);
                 info.setEffectiveTool(
-                    tool == null || tool.isEmpty() ? EffectiveTool.NO_TOOL : TOOLS.computeIfAbsent(tool, this::makeTool));
+                    tool == null || tool.isEmpty() ? EffectiveTool.NO_TOOL
+                        : TOOLS.computeIfAbsent(tool, this::makeTool));
             }
         } else if (phase == HarvestabilityTestPhase.CURRENTLY_HARVESTABLE
             || phase == HarvestabilityTestPhase.IS_HELD_TOOL_EFFECTIVE) {
@@ -59,7 +61,9 @@ public enum GregTech6HarvestHandler implements HarvestHandler {
                 if (held != null && held.getItem() instanceof MultiItemTool) {
                     boolean effective = ((MultiItemTool) held.getItem()).getDigSpeed(held.copy(), block, meta) > 0;
                     if (phase == HarvestabilityTestPhase.CURRENTLY_HARVESTABLE) {
-                        info.setCurrentlyHarvestable(block.getMaterial().isToolNotRequired() || effective);
+                        info.setCurrentlyHarvestable(
+                            block.getMaterial()
+                                .isToolNotRequired() || effective);
                     } else {
                         info.setHeldToolEffective(effective && info.isCurrentlyHarvestable());
                     }

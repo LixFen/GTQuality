@@ -3,13 +3,14 @@ package com.plainston.gtquality;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayerMP;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayerMP;
 import io.netty.buffer.ByteBuf;
 
 public final class MoldPackets {
@@ -24,6 +25,7 @@ public final class MoldPackets {
     }
 
     public static final class Open implements IMessage {
+
         int x, y, z, shape, lastShape;
 
         public Open() {}
@@ -56,19 +58,23 @@ public final class MoldPackets {
     }
 
     public static final class OpenHandler implements IMessageHandler<Open, IMessage> {
+
         @Override
         public IMessage onMessage(final Open message, MessageContext context) {
-            Minecraft.getMinecraft().func_152344_a(new Runnable() {
-                @Override
-                public void run() {
-                    MoldScreen.open(message.x, message.y, message.z, message.shape, message.lastShape);
-                }
-            });
+            Minecraft.getMinecraft()
+                .func_152344_a(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        MoldScreen.open(message.x, message.y, message.z, message.shape, message.lastShape);
+                    }
+                });
             return null;
         }
     }
 
     public static final class Select implements IMessage {
+
         int x, y, z, shape;
 
         public Select() {}
@@ -98,10 +104,12 @@ public final class MoldPackets {
     }
 
     public static final class SelectHandler implements IMessageHandler<Select, IMessage> {
+
         @Override
         public IMessage onMessage(final Select message, final MessageContext context) {
             final EntityPlayerMP player = context.getServerHandler().playerEntity;
             SERVER_TASKS.add(new Runnable() {
+
                 @Override
                 public void run() {
                     MoldInteraction.select(player, message.x, message.y, message.z, message.shape);

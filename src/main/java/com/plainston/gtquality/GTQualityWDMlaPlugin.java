@@ -22,8 +22,8 @@ import com.gtnewhorizons.wdmla.api.view.ItemView;
 import com.gtnewhorizons.wdmla.api.view.ViewGroup;
 
 import gregapi.block.multitileentity.example.MultiTileEntityChest;
-import gregapi.tileentity.inventories.MultiTileEntityMassStorage;
 import gregapi.tileentity.connectors.MultiTileEntityPipeFluid;
+import gregapi.tileentity.inventories.MultiTileEntityMassStorage;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.tileentity.tank.TileEntityBase08Barrel;
@@ -146,8 +146,10 @@ public class GTQualityWDMlaPlugin implements IWDMlaPlugin {
                     return Collections.emptyList();
                 }
                 float[] coords = UT.Code.getFacingCoordsClicked(
-                    drawer.mFacing, (float) (hit.hitVec.xCoord - hit.blockX),
-                    (float) (hit.hitVec.yCoord - hit.blockY), (float) (hit.hitVec.zCoord - hit.blockZ));
+                    drawer.mFacing,
+                    (float) (hit.hitVec.xCoord - hit.blockX),
+                    (float) (hit.hitVec.yCoord - hit.blockY),
+                    (float) (hit.hitVec.zCoord - hit.blockZ));
                 int index = (coords[0] > 0.5F ? 1 : 0) | (coords[1] > 0.5F ? 2 : 0);
                 return ClientViewGroup.map(Collections.singletonList(groups.get(index)), ItemView::new, null);
             }

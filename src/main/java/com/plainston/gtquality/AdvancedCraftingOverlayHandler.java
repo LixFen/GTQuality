@@ -1,9 +1,10 @@
 package com.plainston.gtquality;
 
-import codechicken.nei.recipe.DefaultOverlayHandler;
-import gregapi.tileentity.tools.MultiTileEntityAdvancedCraftingTable;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;
+
+import codechicken.nei.recipe.DefaultOverlayHandler;
+import gregapi.tileentity.tools.MultiTileEntityAdvancedCraftingTable;
 
 final class AdvancedCraftingOverlayHandler extends DefaultOverlayHandler {
 

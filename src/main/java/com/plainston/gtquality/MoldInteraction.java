@@ -5,6 +5,12 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.TreeMap;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+
 import gregapi.data.CS;
 import gregapi.item.multiitem.MultiItem;
 import gregapi.item.multiitem.MultiItemTool;
@@ -13,11 +19,6 @@ import gregapi.item.multiitem.behaviors.IBehavior.AbstractBehaviorDefault;
 import gregapi.oredict.OreDictPrefix;
 import gregtech.items.tools.early.GT_Tool_Chisel;
 import gregtech.tileentity.tools.MultiTileEntityMold;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 
 public final class MoldInteraction {
 
@@ -47,21 +48,25 @@ public final class MoldInteraction {
     static void install() {
         MultiItemTool tools = CS.ToolsGT.sMetaTool;
         IBehavior<MultiItem> behavior = new MoldChiselBehavior();
-        tools.mItemBehaviors.get((short) CS.ToolsGT.CHISEL).add(0, behavior);
-        tools.mItemBehaviors.get((short) CS.ToolsGT.POCKET_CHISEL).add(0, behavior);
+        tools.mItemBehaviors.get((short) CS.ToolsGT.CHISEL)
+            .add(0, behavior);
+        tools.mItemBehaviors.get((short) CS.ToolsGT.POCKET_CHISEL)
+            .add(0, behavior);
     }
 
     private static final class MoldChiselBehavior extends AbstractBehaviorDefault {
+
         @Override
-        public boolean onItemUseFirst(MultiItem item, ItemStack stack, EntityPlayer player, World world, int x,
-            int y, int z, byte side, float hitX, float hitY, float hitZ) {
+        public boolean onItemUseFirst(MultiItem item, ItemStack stack, EntityPlayer player, World world, int x, int y,
+            int z, byte side, float hitX, float hitY, float hitZ) {
             if (!player.isSneaking()) return false;
             TileEntity tile = world.getTileEntity(x, y, z);
             if (tile == null || tile.getClass() != MultiTileEntityMold.class) return false;
             MultiTileEntityMold mold = (MultiTileEntityMold) tile;
             if (!canEdit(mold)) return false;
             if (!world.isRemote) {
-                GTQuality.NETWORK.sendTo(new MoldPackets.Open(x, y, z, shape(mold), lastShape(player)),
+                GTQuality.NETWORK.sendTo(
+                    new MoldPackets.Open(x, y, z, shape(mold), lastShape(player)),
                     (net.minecraft.entity.player.EntityPlayerMP) player);
             }
             return !world.isRemote;
@@ -90,7 +95,9 @@ public final class MoldInteraction {
     }
 
     private static int lastShape(EntityPlayer player) {
-        return player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getInteger(LAST_SHAPE_KEY);
+        return player.getEntityData()
+            .getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG)
+            .getInteger(LAST_SHAPE_KEY);
     }
 
     static void select(EntityPlayer player, int x, int y, int z, int selected) {

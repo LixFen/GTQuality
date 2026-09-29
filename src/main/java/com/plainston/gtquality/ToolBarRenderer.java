@@ -1,16 +1,18 @@
 package com.plainston.gtquality;
 
-import gregapi.data.CS;
-import gregapi.data.TD;
-import gregapi.item.IItemEnergy;
-import gregapi.item.multiitem.MultiItemTool;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
+
 import org.lwjgl.opengl.GL11;
+
+import gregapi.data.CS;
+import gregapi.data.TD;
+import gregapi.item.IItemEnergy;
+import gregapi.item.multiitem.MultiItemTool;
 
 public final class ToolBarRenderer implements IItemRenderer {
 
@@ -47,7 +49,8 @@ public final class ToolBarRenderer implements IItemRenderer {
             ICON_RENDERER.renderIcon(0, 0, icon, 16, 16);
         }
         GL11.glColor4f(1, 1, 1, 1);
-        if (!stack.hasTagCompound() || !stack.getTagCompound().getBoolean("gtquality.hideHarvestIconDurability")) {
+        if (!stack.hasTagCompound() || !stack.getTagCompound()
+            .getBoolean("gtquality.hideHarvestIconDurability")) {
             render(tool, stack, 0, 0);
         }
         GL11.glPopAttrib();

@@ -26,14 +26,16 @@ public abstract class ScaffoldCollisionMixin {
             remap = false),
         remap = false)
     private boolean gtquality$addCollisionBox(MultiTileEntityScaffold scaffold, AxisAlignedBB query,
-        List<AxisAlignedBB> collisions, double minX, double minY, double minZ, double maxX, double maxY,
-        double maxZ) {
+        List<AxisAlignedBB> collisions, double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
         byte design = scaffold.getVisualData();
         if (design == 1 || design == 2) {
             boolean cornerX = (minX == 0.0D && maxX == 0.0625D) || (minX == 0.9375D && maxX == 1.0D);
             boolean cornerZ = (minZ == 0.0D && maxZ == 0.0625D) || (minZ == 0.9375D && maxZ == 1.0D);
-            boolean pillar = minY == 0.0D && maxY == 1.0D && maxX - minX == 0.0625D
-                && maxZ - minZ == 0.0625D && cornerX && cornerZ;
+            boolean pillar = minY == 0.0D && maxY == 1.0D
+                && maxX - minX == 0.0625D
+                && maxZ - minZ == 0.0625D
+                && cornerX
+                && cornerZ;
             if (pillar) {
                 boolean farSidePost;
                 switch (scaffold.getFacing()) {

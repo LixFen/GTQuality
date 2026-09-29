@@ -7,6 +7,8 @@ import static gregapi.data.CS.SIDE_Y_POS;
 import static gregapi.data.CS.SIDE_Z_NEG;
 import static gregapi.data.CS.SIDE_Z_POS;
 
+import net.minecraft.tileentity.TileEntity;
+
 import gregapi.block.multitileentity.MultiTileEntityClassContainer;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.cover.ICover;
@@ -16,7 +18,6 @@ import gregapi.tileentity.connectors.MultiTileEntityPipeFluid;
 import gregapi.tileentity.connectors.MultiTileEntityWireRedstone;
 import gregapi.tileentity.connectors.MultiTileEntityWireRedstoneInsulated;
 import gregapi.tileentity.connectors.TileEntityBase10ConnectorRendered;
-import net.minecraft.tileentity.TileEntity;
 
 public final class SmallCoverHitbox {
 
@@ -38,13 +39,20 @@ public final class SmallCoverHitbox {
             } else {
                 continue;
             }
-            MultiTileEntityClassContainer fixed = new MultiTileEntityClassContainer(old.mID, old.mCreativeTabID,
-                replacement, old.mBlockMetaData, old.mStackSize, old.mBlock, old.mParameters);
+            MultiTileEntityClassContainer fixed = new MultiTileEntityClassContainer(
+                old.mID,
+                old.mCreativeTabID,
+                replacement,
+                old.mBlockMetaData,
+                old.mStackSize,
+                old.mBlock,
+                old.mParameters);
             registry.mRegistry.put(old.mID, fixed);
             registry.mRegistrations.set(i, fixed);
             replaced++;
         }
-        if (replaced == 0) throw new IllegalStateException("GT6 connectors were not registered before GTQuality initialized");
+        if (replaced == 0)
+            throw new IllegalStateException("GT6 connectors were not registered before GTQuality initialized");
     }
 
     private static float[] bounds(TileEntityBase10ConnectorRendered connector) {
@@ -56,14 +64,9 @@ public final class SmallCoverHitbox {
 
         // GT6's shrunkBox() returns a full block whenever covers exist, so start from its cover-free connector bounds.
         float half = (1.0F - connector.mDiameter) / 2.0F;
-        float[] bounds = {
-            connector.connected(SIDE_X_NEG) ? 0 : half,
-            connector.connected(SIDE_Y_NEG) ? 0 : half,
-            connector.connected(SIDE_Z_NEG) ? 0 : half,
-            connector.connected(SIDE_X_POS) ? 1 : 1 - half,
-            connector.connected(SIDE_Y_POS) ? 1 : 1 - half,
-            connector.connected(SIDE_Z_POS) ? 1 : 1 - half
-        };
+        float[] bounds = { connector.connected(SIDE_X_NEG) ? 0 : half, connector.connected(SIDE_Y_NEG) ? 0 : half,
+            connector.connected(SIDE_Z_NEG) ? 0 : half, connector.connected(SIDE_X_POS) ? 1 : 1 - half,
+            connector.connected(SIDE_Y_POS) ? 1 : 1 - half, connector.connected(SIDE_Z_POS) ? 1 : 1 - half };
         for (byte side = 0; side < 6; side++) {
             ICover cover = connector.mCovers.mBehaviours[side];
             if (cover == null) continue;
@@ -81,6 +84,7 @@ public final class SmallCoverHitbox {
     }
 
     public static class InsulatedRedstoneWire extends MultiTileEntityWireRedstoneInsulated {
+
         @Override
         public float[] shrunkBox() {
             float[] bounds = bounds(this);
@@ -89,6 +93,7 @@ public final class SmallCoverHitbox {
     }
 
     public static class RedstoneWire extends MultiTileEntityWireRedstone {
+
         @Override
         public float[] shrunkBox() {
             float[] bounds = bounds(this);
@@ -97,6 +102,7 @@ public final class SmallCoverHitbox {
     }
 
     public static class FluidPipe extends MultiTileEntityPipeFluid {
+
         @Override
         public float[] shrunkBox() {
             float[] bounds = bounds(this);
