@@ -23,24 +23,59 @@ import com.gtnewhorizons.wdmla.api.view.ViewGroup;
 
 import gregapi.block.multitileentity.example.MultiTileEntityChest;
 import gregapi.tileentity.inventories.MultiTileEntityMassStorage;
+import gregapi.tileentity.connectors.MultiTileEntityPipeFluid;
+import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
+import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
+import gregapi.tileentity.tank.TileEntityBase08Barrel;
+import gregapi.tileentity.tank.TileEntityBase08FluidContainer;
 import gregapi.util.UT;
+import gregtech.tileentity.energy.converters.MultiTileEntityBoilerTank;
+import gregtech.tileentity.energy.converters.MultiTileEntityEngineSteam;
+import gregtech.tileentity.energy.converters.MultiTileEntityTurbineSteam;
+import gregtech.tileentity.energy.generators.MultiTileEntityGeneratorFluidBed;
+import gregtech.tileentity.energy.generators.MultiTileEntityGeneratorLiquid;
+import gregtech.tileentity.energy.generators.MultiTileEntityMotorLiquid;
+import gregtech.tileentity.energy.reactors.MultiTileEntityReactorCore;
 import gregtech.tileentity.inventories.MultiTileEntityDrawerQuad;
+import gregtech.tileentity.multiblocks.MultiTileEntityCrucible;
+import gregtech.tileentity.multiblocks.MultiTileEntityTank;
+import gregtech.tileentity.tools.MultiTileEntityMixingBowl;
 
 @WDMlaPlugin(uid = "gtquality", dependencies = { "gtquality", "gregtech" })
 public class GTQualityWDMlaPlugin implements IWDMlaPlugin {
 
     private static final StorageProvider STORAGE = new StorageProvider();
+    private static final GT6WDMlaProvider GT6_INFO = GT6WDMlaProvider.INSTANCE;
+    private static final GT6FluidStorageProvider GT6_FLUIDS = GT6FluidStorageProvider.INSTANCE;
 
     @Override
     public void register(IWDMlaCommonRegistration registration) {
         registration.registerItemStorage(STORAGE, MultiTileEntityMassStorage.class);
         registration.registerItemStorage(STORAGE, MultiTileEntityChest.class);
         registration.registerItemStorage(STORAGE, MultiTileEntityDrawerQuad.class);
+        registration.registerBlockDataProvider(GT6_INFO, Block.class);
+        registration.registerFluidStorage(GT6_FLUIDS, TileEntityBase08FluidContainer.class);
+        registration.registerFluidStorage(GT6_FLUIDS, MultiTileEntityBasicMachine.class);
+        registration.registerFluidStorage(GT6_FLUIDS, TileEntityBase08Barrel.class);
+        registration.registerFluidStorage(GT6_FLUIDS, MultiTileEntityBoilerTank.class);
+        registration.registerFluidStorage(GT6_FLUIDS, MultiTileEntityGeneratorFluidBed.class);
+        registration.registerFluidStorage(GT6_FLUIDS, MultiTileEntityGeneratorLiquid.class);
+        registration.registerFluidStorage(GT6_FLUIDS, MultiTileEntityTank.class);
+        registration.registerFluidStorage(GT6_FLUIDS, MultiTileEntityMultiBlockPart.class);
+        registration.registerFluidStorage(GT6_FLUIDS, MultiTileEntityEngineSteam.class);
+        registration.registerFluidStorage(GT6_FLUIDS, MultiTileEntityTurbineSteam.class);
+        registration.registerFluidStorage(GT6_FLUIDS, MultiTileEntityMixingBowl.class);
+        registration.registerFluidStorage(GT6_FLUIDS, MultiTileEntityPipeFluid.class);
+        registration.registerFluidStorage(GT6_FLUIDS, MultiTileEntityMotorLiquid.class);
+        registration.registerFluidStorage(GT6_FLUIDS, MultiTileEntityReactorCore.class);
+        registration.registerFluidStorage(GT6_FLUIDS, MultiTileEntityCrucible.class);
     }
 
     @Override
     public void registerClient(IWDMlaClientRegistration registration) {
         registration.registerItemStorageClient(STORAGE);
+        registration.registerBlockComponent(GT6_INFO, Block.class);
+        registration.registerFluidStorageClient(GT6_FLUIDS);
         registration.registerHarvest(GregTech6HarvestHandler.INSTANCE, Block.class);
     }
 
