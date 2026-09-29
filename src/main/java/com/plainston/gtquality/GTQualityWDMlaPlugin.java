@@ -50,6 +50,8 @@ public class GTQualityWDMlaPlugin implements IWDMlaPlugin {
 
     @Override
     public void register(IWDMlaCommonRegistration registration) {
+        if (!GTQuality.wdmlaIntegration) return;
+
         registration.registerItemStorage(STORAGE, MultiTileEntityMassStorage.class);
         registration.registerItemStorage(STORAGE, MultiTileEntityChest.class);
         registration.registerItemStorage(STORAGE, MultiTileEntityDrawerQuad.class);
@@ -73,6 +75,8 @@ public class GTQualityWDMlaPlugin implements IWDMlaPlugin {
 
     @Override
     public void registerClient(IWDMlaClientRegistration registration) {
+        if (!GTQuality.wdmlaIntegration) return;
+
         registration.registerItemStorageClient(STORAGE);
         registration.registerBlockComponent(GT6_INFO, Block.class);
         registration.registerFluidStorageClient(GT6_FLUIDS);

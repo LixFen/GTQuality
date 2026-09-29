@@ -30,6 +30,7 @@ public class GTQuality {
     public static boolean allowObstructedInteraction;
     public static boolean guiFluidInteraction;
     public static boolean allowSapBagHopperExtraction;
+    public static boolean wdmlaIntegration;
     public static float scaffoldClimbUpSpeed;
     public static float scaffoldClimbDownSpeed;
 
@@ -48,6 +49,9 @@ public class GTQuality {
         allowSapBagHopperExtraction = config.getBoolean(
             "allowSapBagHopperExtraction", "general", true,
             "Allow hoppers and other sided inventory automation to extract resin items from GT6 Resin/Sap Bags.");
+        wdmlaIntegration = config.getBoolean(
+            "wdmlaIntegration", "client", true,
+            "Enable GTQuality's WDMla HUD, storage, and harvest integrations. Requires a game restart.");
         scaffoldClimbUpSpeed = config.getFloat(
             "scaffoldClimbUpSpeed", "general", Loader.isModLoaded("gaiablossom") ? 0.0F : 0.14F, 0.0F, 2.0F,
             "Extra upward movement on GT6 scaffolds at maximum upward pitch, in blocks per tick. "

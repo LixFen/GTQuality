@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
@@ -28,11 +29,14 @@ import com.gtnewhorizons.wdmla.impl.ui.component.VPanelComponent;
 import com.gtnewhorizons.wdmla.impl.ui.drawable.FluidDrawable;
 import com.gtnewhorizons.wdmla.impl.ui.sizer.Padding;
 import com.gtnewhorizons.wdmla.impl.ui.style.ProgressStyle;
+import com.gtnewhorizons.wdmla.impl.ui.style.TextStyle;
 
 import mcp.mobius.waila.overlay.DisplayUtil;
+import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.CS;
 import gregapi.data.FM;
+import gregapi.data.IL;
 import gregapi.data.MT;
 import gregapi.oredict.OreDictMaterial;
 import gregapi.recipes.Recipe;
@@ -72,6 +76,7 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
     private static final ResourceLocation UID = new ResourceLocation("gtquality", "gt6_details");
     private static final String PARAMS = "gtquality.parameters";
     private static final String TARGET = "gtquality.target";
+    private static final String READY = "gtquality.ready";
     private static final String RECIPE_ACTIVE = "gtquality.recipe.active";
     private static final String RECIPE_COMPLETED = "gtquality.recipe.completed";
     private static final String RECIPE_ITEM_OUTPUTS = "gtquality.recipe.item_outputs";
@@ -89,16 +94,13 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
 
     @Override
     public boolean shouldRequestData(BlockAccessor accessor) {
-        TileEntity tile = accessor.getTileEntity();
-        return isSupported(tile) && !(tile instanceof TileEntityBase08FluidContainer)
-                && !(tile instanceof TileEntityBase08Barrel) && !(tile instanceof MultiTileEntityTank)
-                && !(tile instanceof MultiTileEntityPipeFluid);
+        return hasDirectDetails(accessor.getTileEntity());
     }
 
     @Override
     public void appendServerData(NBTTagCompound data, BlockAccessor accessor) {
         TileEntity tile = accessor.getTileEntity();
-        if (!isSupported(tile)) return;
+        if (!hasDirectDetails(tile)) return;
 
         writeMachineData(tile, data);
 
@@ -116,20 +118,12 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
     }
 
     private static void writeMachineData(TileEntity tile, NBTTagCompound data) {
-        tile.writeToNBT(data);
-        int mteId = data.getInteger("gt.mte.id");
-        if (mteId > 0) {
-            try {
-                MultiTileEntityRegistry registry = MultiTileEntityRegistry.getRegistry("gt.multitileentity");
-                gregapi.block.multitileentity.MultiTileEntityClassContainer container = registry == null ? null
-                        : registry.getClassContainer(mteId);
-                if (container != null && container.mParameters != null) {
-                    data.setTag(PARAMS, container.mParameters.copy());
-                }
-            } catch (RuntimeException ignored) {
-                // Keep the live tile data useful even if a registry entry is unavailable.
-            }
+        if (tile instanceof MultiTileEntityBasicMachine) {
+            writeBasicMachineData((MultiTileEntityBasicMachine) tile, data);
+        } else {
+            writeLegacyHudData(tile, data);
         }
+        writeHudParameters(data);
 
         if (tile instanceof MultiTileEntityBoilerTank) {
             data.setInteger("gt.cooldown", readBoilerCooldown(tile));
@@ -156,6 +150,102 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
             writeRecipeOutputs((MultiTileEntityBasicMachine) tile, data);
         }
         writeMachineState(tile, data);
+        data.setBoolean(READY, true);
+    }
+
+    private static void writeBasicMachineData(MultiTileEntityBasicMachine machine, NBTTagCompound data) {
+        data.setLong("gt.progress", machine.mProgress);
+        data.setLong("gt.maxprogress", machine.mMaxProgress);
+        if (machine instanceof IMultiTileEntity) {
+            data.setInteger("gt.mte.id", ((IMultiTileEntity) machine).getMultiTileEntityID());
+        }
+
+        NBTTagList inventory = new NBTTagList();
+        IInventory machineInventory = (IInventory) machine;
+        for (int slot = 0; slot < machineInventory.getSizeInventory(); slot++) {
+            ItemStack stack = machineInventory.getStackInSlot(slot);
+            if (stack == null || stack.stackSize <= 0 || IL.Display_Fluid.equal(stack, true, true)) continue;
+            NBTTagCompound itemData = new NBTTagCompound();
+            stack.writeToNBT(itemData);
+            itemData.setInteger("s", slot);
+            inventory.appendTag(itemData);
+        }
+        data.setTag("gt.invlist", inventory);
+    }
+
+    private static void writeLegacyHudData(TileEntity tile, NBTTagCompound data) {
+        NBTTagCompound serialized = new NBTTagCompound();
+        tile.writeToNBT(serialized);
+        copyHudTags(tile, serialized, data);
+    }
+
+    private static void copyHudTags(TileEntity tile, NBTTagCompound source, NBTTagCompound target) {
+        copyTags(source, target, "gt.mte.id");
+        if (tile instanceof MultiTileEntitySmeltery || tile instanceof MultiTileEntityCrucible) {
+            copyTags(source, target, "gt.temperature", "gt.materials");
+        } else if (tile instanceof MultiTileEntityBoilerTank) {
+            copyTags(source, target, "gt.energy", "gt.tank.0", "gt.tank.1", "gt.eff");
+        } else if (tile instanceof MultiTileEntityGeneratorSolid) {
+            copyTags(source, target, "gt.energy", "gt.active", "gt.invlist");
+        } else if (tile instanceof MultiTileEntityGeneratorFluidBed) {
+            copyTags(source, target, "gt.energy", "gt.active", "gt.invlist", "gt.tank");
+        } else if (tile instanceof MultiTileEntityGeneratorLiquid) {
+            copyTags(source, target, "gt.active", "gt.tank");
+        } else if (tile instanceof MultiTileEntityRock) {
+            copyTags(source, target, "gt.value");
+        } else if (tile instanceof TileEntityBase08FluidContainer || tile instanceof TileEntityBase08Barrel
+                || tile instanceof MultiTileEntityTank) {
+            copyTags(source, target, "gt.tank");
+        } else if (tile instanceof MultiTileEntityMultiBlockPart) {
+            copyTags(source, target, "gt.target", "gt.target.x", "gt.target.y", "gt.target.z");
+        } else if (tile instanceof MultiTileEntityAnvil) {
+            copyTags(source, target, "gt.durability", "gt.facing");
+        } else if (tile instanceof MultiTileEntityEngineSteam) {
+            copyTags(source, target, CS.NBT_ENERGY, CS.NBT_VISUAL, CS.NBT_EFFICIENCY, CS.NBT_ACTIVE, CS.NBT_STOPPED);
+        } else if (tile instanceof MultiTileEntityTurbineSteam) {
+            copyTags(source, target, "gt.output.su", "gt.tank.0");
+        } else if (tile instanceof MultiTileEntityFluidSpring) {
+            copyTags(source, target, "gt.spring");
+        } else if (tile instanceof MultiTileEntityMixingBowl) {
+            copyTags(source, target, "gt.invlist");
+            for (int i = 0; i < 6; i++) copyTags(source, target, "gt.tank.in." + i);
+            for (int i = 0; i < 2; i++) copyTags(source, target, "gt.tank.out." + i);
+        } else if (tile instanceof MultiTileEntityPipeFluid) {
+            copyTags(source, target, "gt.mlast.8");
+            for (int i = 0; i < 9; i++) copyTags(source, target, "gt.tank." + i);
+        } else if (tile instanceof MultiTileEntitySiftingTable) {
+            copyTags(source, target, "gt.invlist");
+        } else if (tile instanceof MultiTileEntityMotorLiquid) {
+            copyTags(source, target, "gt.energy", "gt.tank.0", "gt.tank.1");
+        } else if (tile instanceof MultiTileEntityReactorCore) {
+            copyTags(source, target, "gt.tank.0", "gt.tank.1", "gt.stopped", "gt.invlist");
+            for (int i = 0; i < 4; i++) copyTags(source, target, "gt.value.o." + i);
+        } else if (tile instanceof MultiTileEntityBush) {
+            copyTags(source, target, "gt.state", "gt.progress", "gt.value");
+        }
+    }
+
+    private static void copyTags(NBTTagCompound source, NBTTagCompound target, String... keys) {
+        for (String key : keys) {
+            if (source.hasKey(key)) target.setTag(key, source.getTag(key).copy());
+        }
+    }
+
+    private static void writeHudParameters(NBTTagCompound data) {
+        int mteId = data.getInteger("gt.mte.id");
+        if (mteId <= 0) return;
+        try {
+            MultiTileEntityRegistry registry = MultiTileEntityRegistry.getRegistry("gt.multitileentity");
+            gregapi.block.multitileentity.MultiTileEntityClassContainer container = registry == null ? null
+                    : registry.getClassContainer(mteId);
+            if (container == null || container.mParameters == null) return;
+            NBTTagCompound parameters = new NBTTagCompound();
+            copyTags(container.mParameters, parameters,
+                    "gt.capacity.su", "gt.capacity", "gt.output.su", "gt.output", "gt.input");
+            data.setTag(PARAMS, parameters);
+        } catch (RuntimeException ignored) {
+            // Keep the live HUD fields useful if a registry entry is unavailable.
+        }
     }
 
     private static void writeMachineState(TileEntity tile, NBTTagCompound data) {
@@ -219,10 +309,13 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
             int y = data.getInteger("gt.target.y");
             int z = data.getInteger("gt.target.z");
             TileEntity target = accessor.getWorld().getTileEntity(x, y, z);
-            if (target != null) appendMachineInfo(tooltip, target, data.getCompoundTag(TARGET), accessor, true);
+            NBTTagCompound targetData = data.getCompoundTag(TARGET);
+            if (target != null && targetData.getBoolean(READY)) {
+                appendMachineInfo(tooltip, target, targetData, accessor, true);
+            }
             return;
         }
-        if (tile != null) appendMachineInfo(tooltip, tile, data, accessor, false);
+        if (tile != null && data.getBoolean(READY)) appendMachineInfo(tooltip, tile, data, accessor, false);
     }
 
     private static boolean isSupported(TileEntity tile) {
@@ -238,6 +331,12 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
                 || tile instanceof MultiTileEntitySiftingTable || tile instanceof MultiTileEntityMotorLiquid
                 || tile instanceof MultiTileEntityReactorCore || tile instanceof MultiTileEntityBush
                 || tile instanceof MultiTileEntityCokeOven || tile instanceof MultiTileEntityTank;
+    }
+
+    private static boolean hasDirectDetails(TileEntity tile) {
+        return isSupported(tile) && !(tile instanceof TileEntityBase08FluidContainer)
+                && !(tile instanceof TileEntityBase08Barrel) && !(tile instanceof MultiTileEntityTank)
+                && !(tile instanceof MultiTileEntityPipeFluid);
     }
 
     private static void appendMachineInfo(ITooltip tooltip, TileEntity tile, NBTTagCompound data,
@@ -596,8 +695,9 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
 
     private static void appendMaterials(ITooltip tooltip, NBTTagCompound materials) {
         VPanelComponent rows = new VPanelComponent();
-        StringBuilder row = new StringBuilder();
+        HPanelComponent row = new HPanelComponent();
         int rowStart = 0;
+        int rowCount = 0;
         for (int i = 0; i < 32; i++) {
             String slot = Integer.toString(i);
             if (!materials.hasKey(slot)) break;
@@ -605,13 +705,20 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
             OreDictMaterial material = OreDictMaterial.get(materialTag.getShort("i"));
             if (material == null) continue;
             long amount = materialTag.getLong("a") / 648648;
-            if (row.length() == 0) rowStart = i;
-            else row.append(" · ");
-            row.append(String.format(Locale.ROOT, "%.3f u %s", amount / 1000.0,
-                    StatCollector.translateToLocal("gt.material." + material.mNameInternal)));
+            if (rowCount == 0) rowStart = i;
+            else row.child(new TextComponent(" | ").style(new TextStyle().color(0xFFFF55)));
+            row.child(new TextComponent(String.format(Locale.ROOT, "%.3f %s", amount / 1000.0,
+                    StatCollector.translateToLocal("gt.material." + material.mNameInternal)))
+                            .style(new TextStyle().color(0xFFFFFF)));
+            rowCount++;
             if (i % 4 == 3 || i == 31 || !materials.hasKey(Integer.toString(i + 1))) {
-                rows.text(String.format("%s %d–%d: %s", tr("materials"), rowStart + 1, i + 1, row));
-                row.setLength(0);
+                HPanelComponent line = new HPanelComponent();
+                line.child(new TextComponent(String.format("%s %d–%d: ", tr("materials"), rowStart + 1, i + 1))
+                        .style(new TextStyle().color(0xFFFFFF)));
+                line.child(row);
+                rows.child(line);
+                row = new HPanelComponent();
+                rowCount = 0;
             }
         }
         if (rows.childrenSize() > 0) tooltip.child(rows);
