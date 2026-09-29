@@ -1,5 +1,12 @@
 gtquality.wdmla.temperature=温度
 gtquality.wdmla.materials=材料
+gtquality.wdmla.mold_produces=生产类型
+gtquality.wdmla.mold_unselected=未选择
+gtquality.wdmla.mold_auto_input_directions=自动接受方向
+gtquality.wdmla.mold_no_directions=无
+gtquality.wdmla.mold_redstone_mode=红石控制类型
+gtquality.wdmla.mold_redstone_requires_signal=有信号时自动接受
+gtquality.wdmla.mold_redstone_uncontrolled=无红石控制（自动接受）
 gtquality.wdmla.tank=储罐
 gtquality.wdmla.fuel=燃料
 gtquality.wdmla.ash=灰烬

@@ -1,5 +1,12 @@
 gtquality.wdmla.temperature=Temperature
 gtquality.wdmla.materials=Materials
+gtquality.wdmla.mold_produces=Produces
+gtquality.wdmla.mold_unselected=Unselected
+gtquality.wdmla.mold_auto_input_directions=Auto-accept directions
+gtquality.wdmla.mold_no_directions=None
+gtquality.wdmla.mold_redstone_mode=Redstone control
+gtquality.wdmla.mold_redstone_requires_signal=Auto-accept with a redstone signal
+gtquality.wdmla.mold_redstone_uncontrolled=No redstone control (auto-accept)
 gtquality.wdmla.tank=Tank
 gtquality.wdmla.fuel=Fuel
 gtquality.wdmla.ash=Ash

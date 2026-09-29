@@ -37,8 +37,10 @@ import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.CS;
 import gregapi.data.FM;
 import gregapi.data.IL;
+import gregapi.data.LH;
 import gregapi.data.MT;
 import gregapi.oredict.OreDictMaterial;
+import gregapi.oredict.OreDictPrefix;
 import gregapi.recipes.Recipe;
 import gregapi.tileentity.connectors.MultiTileEntityAxle;
 import gregapi.tileentity.connectors.MultiTileEntityPipeFluid;
@@ -65,6 +67,7 @@ import gregtech.tileentity.multiblocks.MultiTileEntityCrucible;
 import gregtech.tileentity.multiblocks.MultiTileEntityTank;
 import gregtech.tileentity.plants.MultiTileEntityBush;
 import gregtech.tileentity.tools.MultiTileEntityAnvil;
+import gregtech.tileentity.tools.MultiTileEntityMold;
 import gregtech.tileentity.tools.MultiTileEntityMixingBowl;
 import gregtech.tileentity.tools.MultiTileEntitySiftingTable;
 import gregtech.tileentity.tools.MultiTileEntitySmeltery;
@@ -144,6 +147,8 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
             data.setLong("gtquality.max_temperature", ((MultiTileEntitySmeltery) tile).getTemperatureMax((byte) 0));
         } else if (tile instanceof MultiTileEntityCrucible) {
             data.setLong("gtquality.max_temperature", ((MultiTileEntityCrucible) tile).getTemperatureMax((byte) 0));
+        } else if (tile instanceof MultiTileEntityMold) {
+            data.setLong("gtquality.max_temperature", ((MultiTileEntityMold) tile).getMoldMaxTemperature());
         }
 
         if (tile instanceof MultiTileEntityBasicMachine) {
@@ -181,7 +186,9 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
 
     private static void copyHudTags(TileEntity tile, NBTTagCompound source, NBTTagCompound target) {
         copyTags(source, target, "gt.mte.id");
-        if (tile instanceof MultiTileEntitySmeltery || tile instanceof MultiTileEntityCrucible) {
+        if (tile instanceof MultiTileEntityMold) {
+            copyTags(source, target, "gt.temperature", "gt.mold", "gt.connection", "gt.mode");
+        } else if (tile instanceof MultiTileEntitySmeltery || tile instanceof MultiTileEntityCrucible) {
             copyTags(source, target, "gt.temperature", "gt.materials");
         } else if (tile instanceof MultiTileEntityBoilerTank) {
             copyTags(source, target, "gt.energy", "gt.tank.0", "gt.tank.1", "gt.eff");
@@ -271,7 +278,8 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
     private static void writeRecipeOutputs(MultiTileEntityBasicMachine machine, NBTTagCompound data) {
         boolean completed = machine.mSuccessful && machine.mCurrentRecipe != null;
         data.setBoolean(RECIPE_COMPLETED, completed);
-        boolean active = machine.mCurrentRecipe != null && machine.mMaxProgress > 0;
+        // GT6 persists progress and output buffers, but not mCurrentRecipe.
+        boolean active = machine.mMaxProgress > 0;
         data.setBoolean(RECIPE_ACTIVE, active);
         if (!active && !completed) return;
 
@@ -330,7 +338,8 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
                 || tile instanceof TileEntityBase08Barrel || tile instanceof MultiTileEntityPipeFluid
                 || tile instanceof MultiTileEntitySiftingTable || tile instanceof MultiTileEntityMotorLiquid
                 || tile instanceof MultiTileEntityReactorCore || tile instanceof MultiTileEntityBush
-                || tile instanceof MultiTileEntityCokeOven || tile instanceof MultiTileEntityTank;
+                || tile instanceof MultiTileEntityMold || tile instanceof MultiTileEntityCokeOven
+                || tile instanceof MultiTileEntityTank;
     }
 
     private static boolean hasDirectDetails(TileEntity tile) {
@@ -351,6 +360,8 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
             addLine(tooltip, "temperature", data.getShort("gt.temperature") + " / "
                     + data.getLong("gtquality.max_temperature") + " K");
             appendMaterials(tooltip, data.getCompoundTag("gt.materials"));
+        } else if (tile instanceof MultiTileEntityMold) {
+            appendMoldInfo(tooltip, (MultiTileEntityMold) tile, data);
         } else if (tile instanceof MultiTileEntityBoilerTank) {
             appendBoiler(tooltip, data, throughMultiblockPart);
         } else if (tile instanceof MultiTileEntityGeneratorSolid) {
@@ -400,6 +411,26 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
         } else if (tile instanceof MultiTileEntityBush) {
             appendBush(tooltip, data);
         }
+    }
+
+    private static void appendMoldInfo(ITooltip tooltip, MultiTileEntityMold mold, NBTTagCompound data) {
+        addLine(tooltip, "temperature", data.getLong("gt.temperature") + "K/"
+                + data.getLong("gtquality.max_temperature") + "K");
+
+        OreDictPrefix prefix = mold.getMoldRecipe(data.getInteger("gt.mold"));
+        addLine(tooltip, "mold_produces", prefix == null ? tr("mold_unselected") : prefix.mNameLocal);
+
+        byte directions = data.getByte("gt.connection");
+        StringBuilder autoInputDirections = new StringBuilder();
+        for (byte side : CS.ALL_SIDES_VALID) {
+            if (!CS.SIDES_HORIZONTAL[side] || (directions & CS.SBIT[side]) == 0) continue;
+            if (autoInputDirections.length() > 0) autoInputDirections.append('&');
+            autoInputDirections.append(LH.get(LH.FACES[side]));
+        }
+        addLine(tooltip, "mold_auto_input_directions", autoInputDirections.length() == 0
+                ? tr("mold_no_directions") : autoInputDirections.toString());
+        addLine(tooltip, "mold_redstone_mode", data.getBoolean("gt.mode")
+                ? tr("mold_redstone_requires_signal") : tr("mold_redstone_uncontrolled"));
     }
 
     private static void appendBoiler(ITooltip tooltip, NBTTagCompound data, boolean throughMultiblockPart) {
