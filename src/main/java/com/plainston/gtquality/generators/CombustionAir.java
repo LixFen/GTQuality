@@ -1,4 +1,4 @@
-package com.plainston.gtquality;
+package com.plainston.gtquality.generators;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTrapDoor;

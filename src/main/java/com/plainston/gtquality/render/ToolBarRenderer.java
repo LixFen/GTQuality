@@ -1,4 +1,4 @@
-package com.plainston.gtquality;
+package com.plainston.gtquality.render;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -8,6 +8,8 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 
 import org.lwjgl.opengl.GL11;
+
+import com.plainston.gtquality.GTQuality;
 
 import gregapi.data.CS;
 import gregapi.data.TD;

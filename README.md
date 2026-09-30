@@ -38,6 +38,7 @@ GTQuality 是面向 Minecraft 1.7.10、Forge 和 GregTech 6 的辅助模组，�
 | `allowSapBagHopperExtraction` | `general` | `true` | 允许侧面物品接口从 Resin/Sap Bag 提取产物。 |
 | `scaffoldClimbUpSpeed` | `general` | `0.14`；安装 GaiaTweaks 时为 `0` | 最大抬头角度下的额外上移速度，单位为格/tick；`0` 关闭。 |
 | `scaffoldClimbDownSpeed` | `general` | `0.15` | 最大低头角度下的额外下移速度，单位为格/tick；`0` 关闭。 |
+| `fixAngelicaUnicodeFont` | `client` | `false` | 启动Angelica兼容的FontsFix修复; 未与其余字体mod测试，谨慎开启 |
 
 ## 开发与构建
 
@@ -58,7 +59,6 @@ Linux/macOS：
 ```sh
 ./gradlew build
 ```
-
 ## 特别鸣谢
 
 感谢 [mordds/GT6WailaCompact](https://github.com/mordds/GT6WailaCompact) 为 GT6 WDMla联动提供参考。

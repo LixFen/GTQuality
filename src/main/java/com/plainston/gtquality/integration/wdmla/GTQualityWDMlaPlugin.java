@@ -1,4 +1,4 @@
-package com.plainston.gtquality;
+package com.plainston.gtquality.integration.wdmla;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +20,7 @@ import com.gtnewhorizons.wdmla.api.provider.IServerExtensionProvider;
 import com.gtnewhorizons.wdmla.api.view.ClientViewGroup;
 import com.gtnewhorizons.wdmla.api.view.ItemView;
 import com.gtnewhorizons.wdmla.api.view.ViewGroup;
+import com.plainston.gtquality.GTQuality;
 
 import gregapi.block.multitileentity.example.MultiTileEntityChest;
 import gregapi.tileentity.connectors.MultiTileEntityPipeFluid;

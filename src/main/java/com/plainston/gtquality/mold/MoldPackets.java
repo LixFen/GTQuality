@@ -1,4 +1,4 @@
-package com.plainston.gtquality;
+package com.plainston.gtquality.mold;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;

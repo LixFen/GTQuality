@@ -1,9 +1,11 @@
-package com.plainston.gtquality;
+package com.plainston.gtquality.movement;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.event.entity.living.LivingEvent;
+
+import com.plainston.gtquality.GTQuality;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import gregtech.tileentity.tools.MultiTileEntityScaffold;

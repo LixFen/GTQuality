@@ -1,4 +1,4 @@
-package com.plainston.gtquality;
+package com.plainston.gtquality.mold;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +10,8 @@ import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+
+import com.plainston.gtquality.GTQuality;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

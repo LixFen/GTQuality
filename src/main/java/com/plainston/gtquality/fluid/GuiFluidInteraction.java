@@ -1,4 +1,4 @@
-package com.plainston.gtquality;
+package com.plainston.gtquality.fluid;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -9,6 +9,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
+
+import com.plainston.gtquality.GTQuality;
 
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -25,7 +27,7 @@ public final class GuiFluidInteraction {
 
     private GuiFluidInteraction() {}
 
-    static void install() {
+    public static void install() {
         final IGuiHandler original = GT_API.api_proxy;
         NetworkRegistry.INSTANCE.registerGuiHandler(CS.GAPI, new IGuiHandler() {
 

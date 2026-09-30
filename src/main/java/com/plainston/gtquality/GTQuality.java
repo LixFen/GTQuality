@@ -3,6 +3,16 @@ package com.plainston.gtquality;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
+import com.plainston.gtquality.collision.HopperHitbox;
+import com.plainston.gtquality.collision.SmallCoverHitbox;
+import com.plainston.gtquality.fluid.GuiFluidInteraction;
+import com.plainston.gtquality.integration.angelica.AngelicaFontFix;
+import com.plainston.gtquality.mold.MoldInteraction;
+import com.plainston.gtquality.mold.MoldPackets;
+import com.plainston.gtquality.mold.MoldTooltip;
+import com.plainston.gtquality.movement.ScaffoldClimb;
+import com.plainston.gtquality.render.ToolBarRenderer;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -25,7 +35,7 @@ public class GTQuality {
 
     public static final String MODID = "gtquality";
 
-    static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+    public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
     public static boolean gtmToolBars;
     public static boolean allowObstructedInteraction;
@@ -68,7 +78,7 @@ public class GTQuality {
         fixAngelicaUnicodeFont = config.getBoolean(
             "fixAngelicaUnicodeFont",
             "client",
-            true,
+            false,
             "Render the vanilla non-Unicode font correctly when Angelica's font renderer is enabled.");
         scaffoldClimbUpSpeed = config.getFloat(
             "scaffoldClimbUpSpeed",
@@ -110,7 +120,10 @@ public class GTQuality {
         HopperHitbox.install();
         SmallCoverHitbox.install();
         GuiFluidInteraction.install();
-        if (FMLCommonHandler.instance().getSide().isClient() && fixAngelicaUnicodeFont && Loader.isModLoaded("angelica")) {
+        if (FMLCommonHandler.instance()
+            .getSide()
+            .isClient() && fixAngelicaUnicodeFont
+            && Loader.isModLoaded("angelica")) {
             AngelicaFontFix.apply();
         }
     }

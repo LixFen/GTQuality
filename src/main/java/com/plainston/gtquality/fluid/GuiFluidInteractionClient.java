@@ -1,7 +1,9 @@
-package com.plainston.gtquality;
+package com.plainston.gtquality.fluid;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
+
+import com.plainston.gtquality.GTQuality;
 
 import gregapi.gui.ContainerClientBasicMachine;
 import gregapi.gui.Slot_Render;

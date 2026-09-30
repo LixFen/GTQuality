@@ -1,7 +1,9 @@
-package com.plainston.gtquality;
+package com.plainston.gtquality.integration.nei;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+
+import com.plainston.gtquality.Tags;
 
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;

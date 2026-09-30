@@ -1,4 +1,4 @@
-package com.plainston.gtquality;
+package com.plainston.gtquality.integration.wdmla;
 
 import java.util.ArrayList;
 import java.util.Collections;

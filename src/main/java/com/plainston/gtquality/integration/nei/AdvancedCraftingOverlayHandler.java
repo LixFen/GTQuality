@@ -1,4 +1,4 @@
-package com.plainston.gtquality;
+package com.plainston.gtquality.integration.nei;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;

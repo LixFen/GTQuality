@@ -1,4 +1,4 @@
-package com.plainston.gtquality;
+package com.plainston.gtquality.mold;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -10,6 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import com.plainston.gtquality.GTQuality;
 
 import gregapi.data.CS;
 import gregapi.item.multiitem.MultiItem;
@@ -45,7 +47,7 @@ public final class MoldInteraction {
         }
     }
 
-    static void install() {
+    public static void install() {
         MultiItemTool tools = CS.ToolsGT.sMetaTool;
         IBehavior<MultiItem> behavior = new MoldChiselBehavior();
         tools.mItemBehaviors.get((short) CS.ToolsGT.CHISEL)

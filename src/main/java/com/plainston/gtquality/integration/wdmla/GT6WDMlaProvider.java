@@ -1,4 +1,4 @@
-package com.plainston.gtquality;
+package com.plainston.gtquality.integration.wdmla;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -491,8 +491,7 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
         long steamAmount = steam == null ? 0 : steam.amount;
         long outFactor = Math.max(0, Math.min(3, 4 * steamAmount / steamCapacity - 1));
         int pressure = Math.max(0, Math.min(31, data.getInteger("gt.boiler.pressure")));
-        addLine(tooltip, "boiler_pressure", pressure + " / 31 ("
-            + formatPercent(pressure * 100.0 / 31) + ")");
+        addLine(tooltip, "boiler_pressure", pressure + " / 31 (" + formatPercent(pressure * 100.0 / 31) + ")");
         long efficiency = data.hasKey("gt.eff") ? data.getLong("gt.eff") : 10000;
         addLine(tooltip, "efficiency", formatPercent(efficiency / 100.0));
         addLine(tooltip, "steam_output", params.getLong("gt.output.su") * outFactor + " L/t");

@@ -1,4 +1,4 @@
-package com.plainston.gtquality;
+package com.plainston.gtquality.collision;
 
 import static gregapi.data.CS.SIDE_X_NEG;
 import static gregapi.data.CS.SIDE_X_POS;
@@ -23,7 +23,7 @@ public final class SmallCoverHitbox {
 
     private SmallCoverHitbox() {}
 
-    static void install() {
+    public static void install() {
         MultiTileEntityRegistry registry = MultiTileEntityRegistry.getRegistry("gt.multitileentity");
         if (registry == null) throw new IllegalStateException("GT6 multi-tile registry is unavailable");
         int replaced = 0;

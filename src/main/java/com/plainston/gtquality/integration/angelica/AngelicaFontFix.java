@@ -1,4 +1,4 @@
-package com.plainston.gtquality;
+package com.plainston.gtquality.integration.angelica;
 
 import net.minecraft.client.Minecraft;
 

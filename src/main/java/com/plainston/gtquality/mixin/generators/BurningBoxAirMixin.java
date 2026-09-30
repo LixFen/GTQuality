@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.plainston.gtquality.CombustionAir;
+import com.plainston.gtquality.generators.CombustionAir;
 
 import gregtech.tileentity.energy.generators.MultiTileEntityGeneratorFluidBed;
 import gregtech.tileentity.energy.generators.MultiTileEntityGeneratorLiquid;

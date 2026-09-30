@@ -1,4 +1,4 @@
-package com.plainston.gtquality;
+package com.plainston.gtquality.collision;
 
 import static gregapi.data.CS.TOOL_monkeywrench;
 import static gregapi.data.CS.TOOL_screwdriver;
@@ -23,7 +23,7 @@ public final class HopperHitbox {
 
     private HopperHitbox() {}
 
-    static void install() {
+    public static void install() {
         MultiTileEntityRegistry registry = MultiTileEntityRegistry.getRegistry("gt.multitileentity");
         if (registry == null) throw new IllegalStateException("GT6 multi-tile registry is unavailable");
         int replaced = 0;
