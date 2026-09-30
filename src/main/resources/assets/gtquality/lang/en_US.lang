@@ -19,6 +19,7 @@ gtquality.wdmla.heat=Stored heat
 gtquality.wdmla.efficiency=Efficiency
 gtquality.wdmla.steam_output=Steam output
 gtquality.wdmla.boiler_state=Boiler state
+gtquality.wdmla.boiler_pressure=Boiler pressure
 gtquality.wdmla.steam=Steam
 gtquality.wdmla.burn_time=Burn time remaining
 gtquality.wdmla.heat_output=Heat output

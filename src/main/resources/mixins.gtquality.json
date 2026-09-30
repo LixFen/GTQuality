@@ -11,5 +11,8 @@
     "tools.SapBagHopperExportMixin",
     "tools.ScaffoldCollisionMixin",
     "multiblocks.CrucibleTopTextureMixin"
+  ],
+  "client": [
+    "client.AngelicaUnicodeFontMixin"
   ]
 }

@@ -19,6 +19,7 @@ gtquality.wdmla.heat=储存热量
 gtquality.wdmla.efficiency=效率
 gtquality.wdmla.steam_output=蒸汽输出
 gtquality.wdmla.boiler_state=锅炉状态
+gtquality.wdmla.boiler_pressure=锅炉压力
 gtquality.wdmla.steam=蒸汽
 gtquality.wdmla.burn_time=剩余燃烧时间
 gtquality.wdmla.heat_output=热量输出

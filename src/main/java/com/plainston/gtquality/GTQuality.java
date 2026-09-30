@@ -32,6 +32,7 @@ public class GTQuality {
     public static boolean guiFluidInteraction;
     public static boolean allowSapBagHopperExtraction;
     public static boolean wdmlaIntegration;
+    public static boolean fixAngelicaUnicodeFont;
     public static float scaffoldClimbUpSpeed;
     public static float scaffoldClimbDownSpeed;
 
@@ -64,6 +65,11 @@ public class GTQuality {
             "client",
             true,
             "Enable GTQuality's WDMla HUD, storage, and harvest integrations. Requires a game restart.");
+        fixAngelicaUnicodeFont = config.getBoolean(
+            "fixAngelicaUnicodeFont",
+            "client",
+            true,
+            "Render the vanilla non-Unicode font correctly when Angelica's font renderer is enabled.");
         scaffoldClimbUpSpeed = config.getFloat(
             "scaffoldClimbUpSpeed",
             "general",
@@ -104,5 +110,8 @@ public class GTQuality {
         HopperHitbox.install();
         SmallCoverHitbox.install();
         GuiFluidInteraction.install();
+        if (FMLCommonHandler.instance().getSide().isClient() && fixAngelicaUnicodeFont && Loader.isModLoaded("angelica")) {
+            AngelicaFontFix.apply();
+        }
     }
 }

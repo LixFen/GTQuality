@@ -1,6 +1,5 @@
 package com.plainston.gtquality;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -88,7 +87,6 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
     private static final String STATE_ON = "gtquality.state.on";
     private static final String STATE_PASSIVE = "gtquality.state.passive";
     private static final String STATE_ACTIVE = "gtquality.state.active";
-    private static final Field BOILER_COOLDOWN = findBoilerCooldownField();
 
     @Override
     public ResourceLocation getUid() {
@@ -130,7 +128,7 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
         writeHudParameters(data);
 
         if (tile instanceof MultiTileEntityBoilerTank) {
-            data.setInteger("gt.cooldown", readBoilerCooldown(tile));
+            data.setInteger("gt.boiler.pressure", ((MultiTileEntityBoilerTank) tile).getVisualData() & 31);
         }
         if (tile instanceof MultiTileEntityAxle) {
             data.setLong("gt.transfer.ru", ((MultiTileEntityAxle) tile).mTransferredLast);
@@ -484,22 +482,20 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
         FluidStack fuel = getFluid(data, "gt.tank.0");
         FluidStack steam = getFluid(data, "gt.tank.1");
         long steamCapacity = Math.max(1, params.getLong("gt.capacity.su"));
-        long heatCapacity = Math.max(1, params.getLong("gt.capacity"));
         if (throughMultiblockPart) {
             addFluidGauge(tooltip, "fuel", fuel, 4000);
             addProgressGauge(tooltip, "steam", steam == null ? 0 : steam.amount, steamCapacity, steam);
         }
-        addProgressGauge(tooltip, "heat", data.getLong("gt.energy"), heatCapacity, null);
+        addLine(tooltip, "heat", data.getLong("gt.energy") + " HU");
 
         long steamAmount = steam == null ? 0 : steam.amount;
         long outFactor = Math.max(0, Math.min(3, 4 * steamAmount / steamCapacity - 1));
-        int state = (int) outFactor;
-        if (data.getInteger("gt.cooldown") < 120 && state == 0 && data.getLong("gt.energy") == 0) state = 3;
-        if (data.getLong("gt.energy") != 0 && (fuel == null || fuel.amount == 0)) state = 4;
+        int pressure = Math.max(0, Math.min(31, data.getInteger("gt.boiler.pressure")));
+        addLine(tooltip, "boiler_pressure", pressure + " / 31 ("
+            + formatPercent(pressure * 100.0 / 31) + ")");
         long efficiency = data.hasKey("gt.eff") ? data.getLong("gt.eff") : 10000;
         addLine(tooltip, "efficiency", formatPercent(efficiency / 100.0));
         addLine(tooltip, "steam_output", params.getLong("gt.output.su") * outFactor + " L/t");
-        addLine(tooltip, "boiler_state", tr("state." + state));
     }
 
     private static void appendSolidGenerator(ITooltip tooltip, NBTTagCompound data) {
@@ -968,25 +964,6 @@ public enum GT6WDMlaProvider implements IBlockComponentProvider, IServerDataProv
         if (meta > 9209) return 3;
         if (meta == 9202) return 2;
         return 0;
-    }
-
-    private static Field findBoilerCooldownField() {
-        try {
-            Field field = MultiTileEntityBoilerTank.class.getDeclaredField("mCoolDownResetTimer");
-            field.setAccessible(true);
-            return field;
-        } catch (ReflectiveOperationException ignored) {
-            return null;
-        }
-    }
-
-    private static int readBoilerCooldown(TileEntity boiler) {
-        if (BOILER_COOLDOWN == null) return 0;
-        try {
-            return BOILER_COOLDOWN.getShort(boiler);
-        } catch (IllegalAccessException ignored) {
-            return 0;
-        }
     }
 
     private static String formatTime(long ticks) {
