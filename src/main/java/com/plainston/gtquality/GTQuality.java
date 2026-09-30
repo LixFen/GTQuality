@@ -7,6 +7,7 @@ import com.plainston.gtquality.collision.HopperHitbox;
 import com.plainston.gtquality.collision.SmallCoverHitbox;
 import com.plainston.gtquality.fluid.GuiFluidInteraction;
 import com.plainston.gtquality.integration.angelica.AngelicaFontFix;
+import com.plainston.gtquality.misc.HeatHazmatFireImmunity;
 import com.plainston.gtquality.mold.MoldInteraction;
 import com.plainston.gtquality.mold.MoldPackets;
 import com.plainston.gtquality.mold.MoldTooltip;
@@ -41,6 +42,7 @@ public class GTQuality {
     public static boolean allowObstructedInteraction;
     public static boolean guiFluidInteraction;
     public static boolean allowSapBagHopperExtraction;
+    public static boolean heatHazmatFireImmunity;
     public static boolean wdmlaIntegration;
     public static boolean fixAngelicaUnicodeFont;
     public static float scaffoldClimbUpSpeed;
@@ -70,6 +72,11 @@ public class GTQuality {
             "general",
             true,
             "Allow hoppers and other sided inventory automation to extract resin items from GT6 Resin/Sap Bags.");
+        heatHazmatFireImmunity = config.getBoolean(
+            "heatHazmatFireImmunity",
+            "general",
+            true,
+            "Grant fire damage immunity while wearing a full heat-protective hazmat set recognized by GT6.");
         wdmlaIntegration = config.getBoolean(
             "wdmlaIntegration",
             "client",
@@ -110,6 +117,7 @@ public class GTQuality {
         MoldTooltip.register();
         MinecraftForge.EVENT_BUS.register(new MoldTooltip());
         MinecraftForge.EVENT_BUS.register(new ScaffoldClimb());
+        if (heatHazmatFireImmunity) MinecraftForge.EVENT_BUS.register(new HeatHazmatFireImmunity());
         if (event.getSide()
             .isClient() && gtmToolBars
             && !Loader.isModLoaded("duradisplay")) ToolBarRenderer.install();

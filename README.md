@@ -25,6 +25,10 @@ GTQuality 是面向 Minecraft 1.7.10、Forge 和 GregTech 6 的辅助模组，�
 - **活板门进气**：关闭的原版活板门可作为固体、液体和流化床燃烧箱的进气位置。预计同样支持Et Futurum Requiem的活板门。
 - **小型 Cover 碰撞箱**：修正小型的流体管道和红石线安装部分小型 Cover 后，选取范围错误扩大的问题。
 
+### 生存与防护
+
+- **耐热服火焰免疫**：穿齐 GT6 认可的耐热防护装备时，免疫接触火、持续燃烧、岩浆等火焰伤害。
+
 ## 配置
 
 配置文件位于 `config/gtquality.cfg`。GTQuality 在启动时读取配置，修改后需要重启游戏。
@@ -36,6 +40,7 @@ GTQuality 是面向 Minecraft 1.7.10、Forge 和 GregTech 6 的辅助模组，�
 | `allowObstructedInteraction` | `general` | `true` | 禁用 GT6 的机器遮挡检查。 |
 | `guiFluidInteraction` | `general` | `true` | 启用通过机器 GUI 流体槽进行的容器灌注和抽取。 |
 | `allowSapBagHopperExtraction` | `general` | `true` | 允许侧面物品接口从 Resin/Sap Bag 提取产物。 |
+| `heatHazmatFireImmunity` | `general` | `true` | 穿齐 GT6 认可的耐热防护装备时免疫火焰伤害，包括全防服。 |
 | `scaffoldClimbUpSpeed` | `general` | `0.14`；安装 GaiaTweaks 时为 `0` | 最大抬头角度下的额外上移速度，单位为格/tick；`0` 关闭。 |
 | `scaffoldClimbDownSpeed` | `general` | `0.15` | 最大低头角度下的额外下移速度，单位为格/tick；`0` 关闭。 |
 | `fixAngelicaUnicodeFont` | `client` | `false` | 启动Angelica兼容的FontsFix修复; 未与其余字体mod测试，谨慎开启 |
