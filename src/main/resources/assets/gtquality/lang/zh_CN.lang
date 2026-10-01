@@ -1,4 +1,13 @@
 gtquality.wdmla.temperature=温度
+gtquality.multitileentity.1=创造模式储罐
+gtquality.creative_tank.name=创造模式储罐
+gtquality.creative_tank.tip=无限提供流体；右键配置，拖入 NEI 幻影流体或流体容器选择类型。
+gtquality.creative_tank.empty=拖入 NEI 流体
+gtquality.creative_tank.fluid_tip=选择流体；空光标右键清除
+gtquality.creative_tank.automatic=自动输出
+gtquality.creative_tank.on=开启
+gtquality.creative_tank.off=关闭
+gtquality.creative_tank.apply=设置 L/t
 gtquality.wdmla.materials=材料
 gtquality.wdmla.mold_produces=生产类型
 gtquality.wdmla.mold_unselected=未选择

@@ -5,6 +5,8 @@ import net.minecraftforge.common.config.Configuration;
 
 import com.plainston.gtquality.collision.HopperHitbox;
 import com.plainston.gtquality.collision.SmallCoverHitbox;
+import com.plainston.gtquality.fluid.CreativeTank;
+import com.plainston.gtquality.fluid.CreativeTankPackets;
 import com.plainston.gtquality.fluid.GuiFluidInteraction;
 import com.plainston.gtquality.integration.angelica.AngelicaFontFix;
 import com.plainston.gtquality.misc.HeatHazmatFireImmunity;
@@ -50,6 +52,7 @@ public class GTQuality {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        CreativeTank.register();
         Configuration config = new Configuration(event.getSuggestedConfigurationFile());
         config.load();
         gtmToolBars = config.getBoolean(
@@ -110,6 +113,15 @@ public class GTQuality {
         if (allowObstructedInteraction) CS.OBSTRUCTION_CHECKS = false;
         NETWORK.registerMessage(MoldPackets.OpenHandler.class, MoldPackets.Open.class, 0, Side.CLIENT);
         NETWORK.registerMessage(MoldPackets.SelectHandler.class, MoldPackets.Select.class, 1, Side.SERVER);
+        NETWORK.registerMessage(CreativeTankPackets.Handler.class, CreativeTankPackets.Configure.class, 2, Side.SERVER);
+        NETWORK.registerMessage(
+            CreativeTankPackets.FluidStateHandler.class,
+            CreativeTankPackets.FluidState.class,
+            3,
+            Side.CLIENT);
+        FMLCommonHandler.instance()
+            .bus()
+            .register(new CreativeTankPackets());
         FMLCommonHandler.instance()
             .bus()
             .register(new MoldPackets());

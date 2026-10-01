@@ -1,4 +1,13 @@
 gtquality.wdmla.temperature=Temperature
+gtquality.multitileentity.1=Creative Fluid Tank
+gtquality.creative_tank.name=Creative Fluid Tank
+gtquality.creative_tank.tip=Infinite fluid source; right-click to configure, drag an NEI fluid or filled container to select.
+gtquality.creative_tank.empty=Drag an NEI fluid
+gtquality.creative_tank.fluid_tip=Select fluid; right-click with an empty cursor to clear
+gtquality.creative_tank.automatic=Auto output
+gtquality.creative_tank.on=On
+gtquality.creative_tank.off=Off
+gtquality.creative_tank.apply=Set L/t
 gtquality.wdmla.materials=Materials
 gtquality.wdmla.mold_produces=Produces
 gtquality.wdmla.mold_unselected=Unselected

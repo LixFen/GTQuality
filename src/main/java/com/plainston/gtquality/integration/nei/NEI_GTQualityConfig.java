@@ -16,6 +16,7 @@ public class NEI_GTQualityConfig implements IConfigureNEI {
 
     @Override
     public void loadConfig() {
+        API.registerNEIGuiHandler(new CreativeTankNEIHandler());
         MinecraftForge.EVENT_BUS.register(this);
         for (RecipeMap recipeMap : RecipeMap.RECIPE_MAP_LIST) {
             if (!recipeMap.mNEIAllowed) {
