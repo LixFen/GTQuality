@@ -3,13 +3,17 @@ package com.plainston.gtquality;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
+import com.plainston.gtquality.circuit.CircuitInteraction;
+import com.plainston.gtquality.circuit.CircuitPackets;
 import com.plainston.gtquality.collision.HopperHitbox;
 import com.plainston.gtquality.collision.SmallCoverHitbox;
 import com.plainston.gtquality.fluid.CreativeTank;
 import com.plainston.gtquality.fluid.CreativeTankPackets;
 import com.plainston.gtquality.fluid.GuiFluidInteraction;
 import com.plainston.gtquality.integration.angelica.AngelicaFontFix;
+import com.plainston.gtquality.integration.nei.FilterGhostPackets;
 import com.plainston.gtquality.misc.HeatHazmatFireImmunity;
+import com.plainston.gtquality.misc.UniversalHazmat;
 import com.plainston.gtquality.mold.MoldInteraction;
 import com.plainston.gtquality.mold.MoldPackets;
 import com.plainston.gtquality.mold.MoldTooltip;
@@ -45,6 +49,8 @@ public class GTQuality {
     public static boolean guiFluidInteraction;
     public static boolean allowSapBagHopperExtraction;
     public static boolean heatHazmatFireImmunity;
+    public static boolean circuitSelectorGui;
+    public static boolean universalHazmatEnhancement;
     public static boolean wdmlaIntegration;
     public static boolean fixAngelicaUnicodeFont;
     public static float scaffoldClimbUpSpeed;
@@ -80,6 +86,18 @@ public class GTQuality {
             "general",
             true,
             "Grant fire damage immunity while wearing a full heat-protective hazmat set recognized by GT6.");
+        circuitSelectorGui = config.getBoolean(
+            "circuitSelectorGui",
+            "general",
+            true,
+            "Allow sneak-right-clicking held selector circuits to choose their number in a GUI. Requires a game restart.");
+        universalHazmatEnhancement = config.getBoolean(
+            "universalHazmatEnhancement",
+            "general",
+            true,
+            "Grant 20 armor points for a full universal hazmat set and quadruple its durability. "
+                + "Preserves existing item damage. Disabling restores original durability; heavily worn items may break. "
+                + "Requires a game restart. Use the same setting on client and server.");
         wdmlaIntegration = config.getBoolean(
             "wdmlaIntegration",
             "client",
@@ -114,6 +132,8 @@ public class GTQuality {
         NETWORK.registerMessage(MoldPackets.OpenHandler.class, MoldPackets.Open.class, 0, Side.CLIENT);
         NETWORK.registerMessage(MoldPackets.SelectHandler.class, MoldPackets.Select.class, 1, Side.SERVER);
         NETWORK.registerMessage(CreativeTankPackets.Handler.class, CreativeTankPackets.Configure.class, 2, Side.SERVER);
+        NETWORK.registerMessage(FilterGhostPackets.Handler.class, FilterGhostPackets.Select.class, 4, Side.SERVER);
+        NETWORK.registerMessage(CircuitPackets.Handler.class, CircuitPackets.Select.class, 5, Side.SERVER);
         NETWORK.registerMessage(
             CreativeTankPackets.FluidStateHandler.class,
             CreativeTankPackets.FluidState.class,
@@ -126,6 +146,13 @@ public class GTQuality {
             .bus()
             .register(new MoldPackets());
         MoldInteraction.install();
+        FMLCommonHandler.instance()
+            .bus()
+            .register(new CircuitPackets());
+        if (circuitSelectorGui) MinecraftForge.EVENT_BUS.register(new CircuitInteraction());
+        FMLCommonHandler.instance()
+            .bus()
+            .register(new FilterGhostPackets());
         MoldTooltip.register();
         MinecraftForge.EVENT_BUS.register(new MoldTooltip());
         MinecraftForge.EVENT_BUS.register(new ScaffoldClimb());
@@ -137,6 +164,7 @@ public class GTQuality {
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
+        if (universalHazmatEnhancement) UniversalHazmat.install();
         HopperHitbox.install();
         SmallCoverHitbox.install();
         GuiFluidInteraction.install();

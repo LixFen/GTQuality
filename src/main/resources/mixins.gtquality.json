@@ -10,6 +10,7 @@
     "inventories.MassStorageFormMixin",
     "tools.SapBagHopperExportMixin",
     "tools.ScaffoldCollisionMixin",
+    "tools.UniversalHazmatMixin",
     "multiblocks.CrucibleTopTextureMixin"
   ],
   "client": [

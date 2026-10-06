@@ -78,3 +78,7 @@ gtquality.wdmla.state.4=干烧
 gtquality.wdmla.state.running=运行中
 gtquality.wdmla.state.stopped=已停止
 gtquality.wdmla.state.idle=闲置
+gtquality.nei.filter.ghost=可拖入 NEI 幻影物品设置过滤条件（不消耗物品）
+gtquality.circuit.tooltip=手持时 Shift + 右键选择序号（整组修改）
+gtquality.circuit.title=选择电路序号
+gtquality.circuit.current=当前：%s

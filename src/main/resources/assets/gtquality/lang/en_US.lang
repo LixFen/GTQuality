@@ -78,3 +78,7 @@ gtquality.wdmla.state.4=Dry firing
 gtquality.wdmla.state.running=Running
 gtquality.wdmla.state.stopped=Stopped
 gtquality.wdmla.state.idle=Idle
+gtquality.nei.filter.ghost=Drag an NEI ghost item here to set the filter (no items consumed)
+gtquality.circuit.tooltip=Sneak + right-click while holding to select a number (whole stack)
+gtquality.circuit.title=Select circuit number
+gtquality.circuit.current=Current: %s
