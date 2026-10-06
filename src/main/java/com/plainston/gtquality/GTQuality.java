@@ -52,6 +52,7 @@ public class GTQuality {
     public static boolean circuitSelectorGui;
     public static boolean universalHazmatEnhancement;
     public static boolean wdmlaIntegration;
+    public static boolean neiWorldgenDisplay;
     public static boolean fixAngelicaUnicodeFont;
     public static float scaffoldClimbUpSpeed;
     public static float scaffoldClimbDownSpeed;
@@ -103,6 +104,11 @@ public class GTQuality {
             "client",
             true,
             "Enable GTQuality's WDMla HUD, storage, and harvest integrations. Requires a game restart.");
+        neiWorldgenDisplay = config.getBoolean(
+            "neiWorldgenDisplay",
+            "client",
+            true,
+            "Show GT6 resource generation pages in NEI. Requires a game restart.");
         fixAngelicaUnicodeFont = config.getBoolean(
             "fixAngelicaUnicodeFont",
             "client",

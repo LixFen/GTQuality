@@ -34,12 +34,17 @@
  * For more details, see https://docs.gradle.org/8.0.1/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
 dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.11.4")
     implementation("com.gregoriust.gregtech:gregtech_1.7.10:6.17.06:dev") {
         exclude group: "mcp.mobius.waila", module: "Waila"
     }
     compileOnly("ic2:IC2Classic:1.2.1.8:dev")
     compileOnly("appeng:appliedenergistics2:rv3-beta-6:dev")
-    implementation("com.github.GTNewHorizons:NotEnoughItems:2.8.144-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:NotEnoughItems:2.8.144-GTNH:dev")
+    runtimeOnlyNonPublishable(
+    rfg.deobf("com.github.GTNewHorizons:NotEnoughItems:2.8.144-GTNH")
+)
     implementation("com.github.GTNewHorizons:CodeChickenCore:1.4.21:dev")
     devOnlyNonPublishable("com.github.GTNewHorizons:WDMla:2.8.2:dev")
     devOnlyNonPublishable("com.github.GTNewHorizons:Angelica:2.2.24:dev")

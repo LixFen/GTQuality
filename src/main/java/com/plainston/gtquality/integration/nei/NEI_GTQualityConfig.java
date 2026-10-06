@@ -3,6 +3,7 @@ package com.plainston.gtquality.integration.nei;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 
+import com.plainston.gtquality.GTQuality;
 import com.plainston.gtquality.Tags;
 
 import codechicken.nei.api.API;
@@ -18,6 +19,7 @@ public class NEI_GTQualityConfig implements IConfigureNEI {
 
     @Override
     public void loadConfig() {
+        if (GTQuality.neiWorldgenDisplay) WorldgenNEIHandler.register();
         API.registerNEIGuiHandler(new CreativeTankNEIHandler());
         FilterNEIHandler filterHandler = new FilterNEIHandler();
         // Run before NEI's CheatItemHandler, which can consume or modify the dragged stack.
