@@ -10,6 +10,7 @@ GTQuality 是面向 Minecraft 1.7.10、Forge 和 GregTech 6 的辅助模组，�
 - **模具雕刻**：手持凿子潜行右键模具，在界面中选择雕刻形状；也可以清除当前形状。模具物品提示包含操作说明。
 - **漏斗碰撞箱**：为普通漏斗和排队漏斗提供贴合模型的选取与碰撞检测，并处理 Cover 的检测。
 - **GUI 流体交互**：在支持的 GT6 机器 GUI 中，点击流体槽可以用光标上的流体容器向机器注液或取液。Shift 点击可连续处理光标堆叠中的容器。
+- **流体管道单向端口**：手持扳手 Shift + 右键 GT6 流体管道的一端，将该端口切换为“只出不进”，再次操作恢复双向流动；普通扳手右键仍用于连接或断开。管壁箭头指向允许输出的方向，支持六个方向和多通道管道，设置随世界保存和区块加载同步。客户端和服务端均需安装 GTQuality；服务端配置决定是否限制流入，关闭功能会保留设置。拆下管道后重新放置会恢复默认双向流动。
 - **创造模式储罐**：在 GTQuality 创造物品栏或 NEI 中获取，无合成配方。右键打开 GT GUI，将 NEI 幻影流体或装有流体的容器拖入流体槽选择类型，也可用光标上的流体容器点击选择，不消耗物品。可切换自动输出，设置 `0–2147483647 L/tick` 的输出速率（默认 `1000`）；`0` 停止输出。自动输出默认关闭，开启后向六面相邻流体接口推送；管道抽取和自动输出共享每 tick 的总速率限制。点击 `X` 或空光标右键流体槽清除选择，设置随存档和方块掉落保留。
 - **遮挡交互**：`allowObstructedInteraction` 开启时，机器面被相邻方块遮挡也可以交互。
 - **树脂袋自动提取**：允许漏斗等侧面物品接口从 Resin/Sap Bag 提取树脂产物。
@@ -43,6 +44,7 @@ GTQuality 是面向 Minecraft 1.7.10、Forge 和 GregTech 6 的辅助模组，�
 | `wdmlaIntegration` | `client` | `true` | 启用 GTQuality 的 WDMla HUD、储存和采掘提示注册。关闭后需重启游戏。 |
 | `allowObstructedInteraction` | `general` | `true` | 禁用 GT6 的机器遮挡检查。 |
 | `guiFluidInteraction` | `general` | `true` | 启用通过机器 GUI 流体槽进行的容器灌注和抽取。 |
+| `oneWayFluidPipes` | `general` | `true` | 启用潜行扳手右键设置流体管道端口只出不进；关闭时暂停限制并保留存档设置。 |
 | `allowSapBagHopperExtraction` | `general` | `true` | 允许侧面物品接口从 Resin/Sap Bag 提取产物。 |
 | `heatHazmatFireImmunity` | `general` | `true` | 穿齐 GT6 认可的耐热防护装备时免疫火焰伤害，包括全防服。 |
 | `circuitSelectorGui` | `general` | `true` | 启用手持选择器电路 Shift + 右键选号 GUI 和操作提示。 |

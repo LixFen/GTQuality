@@ -1,4 +1,7 @@
 gtquality.wdmla.temperature=温度
+gtquality.pipe.output_only=管道端口：只出不进
+gtquality.pipe.bidirectional=管道端口：允许双向流动
+gtquality.pipe.tip=潜行并用扳手右键端口，切换只出不进；箭头指向输出方向。
 gtquality.multitileentity.1=创造模式储罐
 gtquality.creative_tank.name=创造模式储罐
 gtquality.creative_tank.tip=无限提供流体；右键配置，拖入 NEI 幻影流体或流体容器选择类型。

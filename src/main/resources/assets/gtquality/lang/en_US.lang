@@ -1,4 +1,7 @@
 gtquality.wdmla.temperature=Temperature
+gtquality.pipe.output_only=Pipe side: output only
+gtquality.pipe.bidirectional=Pipe side: input and output allowed
+gtquality.pipe.tip=Sneak-right-click with a wrench to toggle output-only flow on a side. Arrows point outward.
 gtquality.multitileentity.1=Creative Fluid Tank
 gtquality.creative_tank.name=Creative Fluid Tank
 gtquality.creative_tank.tip=Infinite fluid source; right-click to configure, drag an NEI fluid or filled container to select.

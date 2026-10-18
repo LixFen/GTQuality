@@ -18,6 +18,7 @@ import com.plainston.gtquality.mold.MoldInteraction;
 import com.plainston.gtquality.mold.MoldPackets;
 import com.plainston.gtquality.mold.MoldTooltip;
 import com.plainston.gtquality.movement.ScaffoldClimb;
+import com.plainston.gtquality.render.PipeFlowTexture;
 import com.plainston.gtquality.render.ToolBarRenderer;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -47,6 +48,7 @@ public class GTQuality {
     public static boolean gtmToolBars;
     public static boolean allowObstructedInteraction;
     public static boolean guiFluidInteraction;
+    public static boolean oneWayFluidPipes;
     public static boolean allowSapBagHopperExtraction;
     public static boolean heatHazmatFireImmunity;
     public static boolean circuitSelectorGui;
@@ -77,6 +79,12 @@ public class GTQuality {
             "general",
             true,
             "Allow fluid containers on the cursor to fill and drain GT6 machine tanks through their GUI slots.");
+        oneWayFluidPipes = config.getBoolean(
+            "oneWayFluidPipes",
+            "general",
+            true,
+            "Allow sneak-wrenching a GT6 fluid pipe side to toggle output-only flow. Existing settings are preserved "
+                + "while disabled. Requires a game restart.");
         allowSapBagHopperExtraction = config.getBoolean(
             "allowSapBagHopperExtraction",
             "general",
@@ -130,6 +138,8 @@ public class GTQuality {
             2.0F,
             "Extra downward movement on GT6 scaffolds at maximum downward pitch, in blocks per tick. Set to 0 to disable.");
         if (config.hasChanged()) config.save();
+        if (event.getSide()
+            .isClient()) PipeFlowTexture.init();
     }
 
     @EventHandler

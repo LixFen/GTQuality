@@ -36,6 +36,8 @@
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.11.4")
+    testRuntimeOnly("org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209")
+    testRuntimeOnly("org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209")
     implementation("com.gregoriust.gregtech:gregtech_1.7.10:6.17.06:dev") {
         exclude group: "mcp.mobius.waila", module: "Waila"
     }
