@@ -10,6 +10,7 @@ import com.plainston.gtquality.collision.SmallCoverHitbox;
 import com.plainston.gtquality.fluid.CreativeTank;
 import com.plainston.gtquality.fluid.CreativeTankPackets;
 import com.plainston.gtquality.fluid.GuiFluidInteraction;
+import com.plainston.gtquality.integration.ae2.AE2Integration;
 import com.plainston.gtquality.integration.angelica.AngelicaFontFix;
 import com.plainston.gtquality.integration.nei.FilterGhostPackets;
 import com.plainston.gtquality.misc.HeatHazmatFireImmunity;
@@ -38,7 +39,7 @@ import gregapi.data.CS;
     version = Tags.VERSION,
     name = "GTQuality",
     acceptedMinecraftVersions = "[1.7.10]",
-    dependencies = "required-after:gregtech")
+    dependencies = "required-after:gregtech;after:appliedenergistics2")
 public class GTQuality {
 
     public static final String MODID = "gtquality";
@@ -144,6 +145,7 @@ public class GTQuality {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        AE2Integration.register();
         if (allowObstructedInteraction) CS.OBSTRUCTION_CHECKS = false;
         NETWORK.registerMessage(MoldPackets.OpenHandler.class, MoldPackets.Open.class, 0, Side.CLIENT);
         NETWORK.registerMessage(MoldPackets.SelectHandler.class, MoldPackets.Select.class, 1, Side.SERVER);
