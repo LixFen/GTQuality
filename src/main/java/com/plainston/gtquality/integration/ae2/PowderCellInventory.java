@@ -12,13 +12,7 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.util.item.AEItemStack;
-import gregapi.data.MD;
-import gregapi.data.MT;
-import gregapi.data.OP;
-import gregapi.data.TD;
 import gregapi.oredict.OreDictItemData;
-import gregapi.oredict.OreDictMaterial;
-import gregapi.util.OM;
 import gregapi.util.ST;
 
 final class PowderCellInventory implements IMEInventoryHandler<IAEItemStack> {
@@ -27,40 +21,31 @@ final class PowderCellInventory implements IMEInventoryHandler<IAEItemStack> {
     private final ItemStack cell;
     private final ISaveProvider host;
     private final PowderAmounts amounts = new PowderAmounts();
+    private final PowderCellConfig forms;
 
     PowderCellInventory(ItemStack cell, ISaveProvider host) {
         this.cell = cell;
         this.host = host;
+        forms = new PowderCellConfig(cell);
         if (cell.hasTagCompound()) amounts.read(
             cell.getTagCompound()
                 .getTagList(CONTENTS, 10));
     }
 
-    private static OreDictItemData powder(ItemStack stack) {
-        if (stack == null || stack.hasTagCompound()) return null;
-        OreDictItemData data = OM.anydata_(stack);
-        if (data == null || !data.validData() || !data.mPrefix.contains(TD.Prefix.DUST_BASED)) return null;
-        if (data.mBlackListed && (data.mMaterial.mMaterial == MT.Glass || !MD.MC.owns(stack))) return null;
-        return ST.valid(OP.dust.mat(data.mMaterial.mMaterial, 1)) ? data : null;
-    }
-
-    private static ItemStack dust(String material) {
-        OreDictMaterial mat = OreDictMaterial.MATERIAL_MAP.get(material);
-        return mat == null ? null : OP.dust.mat(mat, 1);
-    }
-
     @Override
     public IAEItemStack injectItems(IAEItemStack input, Actionable mode, BaseActionSource source) {
-        OreDictItemData data = input == null ? null : powder(input.getItemStack());
+        OreDictItemData data = input == null ? null : PowderCellConfig.powder(input.getItemStack());
         if (data == null || input.getStackSize() <= 0) return input;
         String material = data.mMaterial.mMaterial.mNameInternal;
-        long before = amounts.whole(material);
+        if (!forms.acceptsMaterial(material)) return input;
+        long outputUnits = forms.unitsPerItem(material);
+        long before = amounts.whole(material, outputUnits);
         long accepted = amounts
             .insert(material, data.mPrefix.mAmount, input.getStackSize(), mode == Actionable.SIMULATE);
         if (accepted == 0) return input;
         if (mode == Actionable.MODULATE) {
-            IAEItemStack output = AEItemStack.create(dust(material));
-            output.setStackSize(amounts.whole(material) - before);
+            IAEItemStack output = AEItemStack.create(forms.output(material));
+            output.setStackSize(amounts.whole(material, outputUnits) - before);
             PowderCellChanges.converted(input, accepted, output);
             save();
         }
@@ -71,12 +56,13 @@ final class PowderCellInventory implements IMEInventoryHandler<IAEItemStack> {
 
     @Override
     public IAEItemStack extractItems(IAEItemStack request, Actionable mode, BaseActionSource source) {
-        OreDictItemData data = request == null ? null : powder(request.getItemStack());
-        if (data == null || data.mPrefix != OP.dust) return null;
+        OreDictItemData data = request == null ? null : PowderCellConfig.powder(request.getItemStack());
+        if (data == null) return null;
         String material = data.mMaterial.mMaterial.mNameInternal;
-        ItemStack canonical = dust(material);
+        ItemStack canonical = forms.output(material);
         if (!ST.equal(canonical, request.getItemStack())) return null;
-        long extracted = amounts.extract(material, request.getStackSize(), mode == Actionable.SIMULATE);
+        long extracted = amounts
+            .extract(material, data.mPrefix.mAmount, request.getStackSize(), mode == Actionable.SIMULATE);
         if (extracted == 0) return null;
         if (mode == Actionable.MODULATE) save();
         return request.copy()
@@ -93,8 +79,8 @@ final class PowderCellInventory implements IMEInventoryHandler<IAEItemStack> {
     @Override
     public IItemList<IAEItemStack> getAvailableItems(IItemList<IAEItemStack> out) {
         amounts.materials.forEach((material, units) -> {
-            long count = amounts.whole(material);
-            IAEItemStack stack = AEItemStack.create(dust(material));
+            long count = amounts.whole(material, forms.unitsPerItem(material));
+            IAEItemStack stack = AEItemStack.create(forms.output(material));
             if (count > 0 && stack != null) out.add(stack.setStackSize(count));
         });
         return out;
@@ -110,15 +96,16 @@ final class PowderCellInventory implements IMEInventoryHandler<IAEItemStack> {
 
     @Override
     public boolean canAccept(IAEItemStack input) {
-        OreDictItemData data = input == null ? null : powder(input.getItemStack());
-        return data != null
+        OreDictItemData data = input == null ? null : PowderCellConfig.powder(input.getItemStack());
+        return data != null && forms.acceptsMaterial(data.mMaterial.mMaterial.mNameInternal)
             && amounts.insert(data.mMaterial.mMaterial.mNameInternal, data.mPrefix.mAmount, 1, true) > 0;
     }
 
     @Override
     public boolean isPrioritized(IAEItemStack input) {
-        OreDictItemData data = input == null ? null : powder(input.getItemStack());
-        return data != null && amounts.materials.containsKey(data.mMaterial.mMaterial.mNameInternal);
+        OreDictItemData data = input == null ? null : PowderCellConfig.powder(input.getItemStack());
+        return data != null && forms.acceptsMaterial(data.mMaterial.mMaterial.mNameInternal)
+            && amounts.materials.containsKey(data.mMaterial.mMaterial.mNameInternal);
     }
 
     @Override
