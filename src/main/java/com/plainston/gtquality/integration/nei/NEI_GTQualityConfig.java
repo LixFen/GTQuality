@@ -1,5 +1,10 @@
 package com.plainston.gtquality.integration.nei;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -12,6 +17,7 @@ import codechicken.nei.api.GuiInfo;
 import codechicken.nei.api.IConfigureNEI;
 import codechicken.nei.event.NEIConfigsLoadedEvent;
 import codechicken.nei.guihook.GuiContainerManager;
+import codechicken.nei.recipe.RecipeCatalysts;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import gregapi.recipes.Recipe.RecipeMap;
@@ -21,6 +27,7 @@ public class NEI_GTQualityConfig implements IConfigureNEI {
 
     @Override
     public void loadConfig() {
+        GT6ItemGroups.register();
         if (GTQuality.neiWorldgenDisplay) WorldgenNEIHandler.register();
         if (GTQuality.neiMultiblockPreview && Loader.isModLoaded("blockrenderer6343")) {
             GT6MultiblockHandler.register();
@@ -36,19 +43,20 @@ public class NEI_GTQualityConfig implements IConfigureNEI {
         }
         GuiContainerManager.addTooltipHandler(filterHandler);
         MinecraftForge.EVENT_BUS.register(this);
-        for (RecipeMap recipeMap : RecipeMap.RECIPE_MAP_LIST) {
-            if (!recipeMap.mNEIAllowed) {
-                continue;
-            }
-
-            for (ItemStack machine : recipeMap.mRecipeMachineList) {
-                API.addRecipeCatalyst(machine, recipeMap.mNameNEI);
-            }
-        }
     }
 
     @SubscribeEvent
     public void onNEIConfigsLoaded(NEIConfigsLoadedEvent event) {
+        // NEI loads its default catalysts after loadConfig(). Replace them only once that load has completed.
+        Map<String, List<ItemStack>> machinesByHandler = new LinkedHashMap<>();
+        for (RecipeMap recipeMap : RecipeMap.RECIPE_MAP_LIST) {
+            if (!recipeMap.mNEIAllowed) {
+                continue;
+            }
+            machinesByHandler.computeIfAbsent(recipeMap.mNameNEI, id -> new ArrayList<>())
+                .addAll(recipeMap.mRecipeMachineList);
+        }
+        machinesByHandler.forEach(RecipeCatalysts::putRecipeCatalysts);
         API.registerGuiOverlayHandler(
             MultiTileEntityGUIClientAdvancedCraftingTable.class,
             new AdvancedCraftingOverlayHandler(),

@@ -57,6 +57,7 @@ public class GTQuality {
     public static boolean wdmlaIntegration;
     public static boolean neiWorldgenDisplay;
     public static boolean neiMultiblockPreview;
+    public static boolean neiItemGroups;
     public static boolean fixAngelicaUnicodeFont;
     public static float scaffoldClimbUpSpeed;
     public static float scaffoldClimbDownSpeed;
@@ -124,6 +125,12 @@ public class GTQuality {
             "client",
             true,
             "Show GT6 multiblock structures in NEI when BlockRenderer6343 is installed. Requires a game restart.");
+        neiItemGroups = config.getBoolean(
+            "neiItemGroups",
+            "client",
+            true,
+            "Group GT6 machines, building blocks, components, food, books and fluid displays in NEI. "
+                + "Requires a game restart.");
         fixAngelicaUnicodeFont = config.getBoolean(
             "fixAngelicaUnicodeFont",
             "client",
