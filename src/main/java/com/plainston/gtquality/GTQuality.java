@@ -47,6 +47,7 @@ public class GTQuality {
     public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
     public static boolean gtmToolBars;
+    public static boolean sensorWireConnections;
     public static boolean allowObstructedInteraction;
     public static boolean guiFluidInteraction;
     public static boolean oneWayFluidPipes;
@@ -72,6 +73,11 @@ public class GTQuality {
             "client",
             true,
             "Replace GT6 tool charge and durability icons with GTM-style bars in GUIs.");
+        sensorWireConnections = config.getBoolean(
+            "sensorWireConnections",
+            "client",
+            false,
+            "Draw bent redstone wire connections to the sides of GT6 sensors. Requires a game restart.");
         allowObstructedInteraction = config.getBoolean(
             "allowObstructedInteraction",
             "general",

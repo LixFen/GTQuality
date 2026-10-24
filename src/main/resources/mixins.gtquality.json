@@ -17,6 +17,7 @@
     "multiblocks.CrucibleTopTextureMixin"
   ],
   "client": [
+    "client.SensorWireBendMixin",
     "client.MultiblockPreviewCaptureMixin",
     "client.AngelicaUnicodeFontMixin"
   ]
